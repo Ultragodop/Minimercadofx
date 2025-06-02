@@ -4,13 +4,12 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.*?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
+
 
 <StackPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
          fx:controller="com.project.minimercadofx.controllers.LoginController"
          style="-fx-background-color: linear-gradient(to bottom right, #2193b0, #6dd5ed);">
-    
+
     <VBox alignment="CENTER" spacing="20.0" fx:id="formContainer">
         <StackPane style="-fx-background-color: white; -fx-background-radius: 15;" 
                   maxWidth="400" maxHeight="500">
@@ -48,6 +47,8 @@
                         style="-fx-background-color: #2193b0; -fx-text-fill: white; -fx-font-weight: bold; 
                                -fx-background-radius: 25; -fx-cursor: hand;"
                         prefWidth="200" prefHeight="45"/>
+                <Button fx:id="registerButton" text="Registrar"
+                style="-fx-background-color: rgba(255,255,255,0.55);"/>
                 
             </VBox>
         </StackPane>

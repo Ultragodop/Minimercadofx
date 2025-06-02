@@ -1,5 +1,7 @@
 package com.project.minimercadofx.controllers;
 
+
+import com.project.minimercadofx.models.Auth.RegisterResponse;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -11,18 +13,17 @@ import com.project.minimercadofx.models.Auth.LoginResponse;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 
-public class LoginController {
-    @FXML
-    public Button registerButton;
+public class RegisterController {
     @FXML
     private TextField usernameField;
-    
+
     @FXML
     private PasswordField passwordField;
-    
     @FXML
-    private Button loginButton;
-    
+    private TextField rolField;
+    @FXML
+    private Button registerButton;
+
     @FXML
     private VBox formContainer;
 
@@ -31,84 +32,92 @@ public class LoginController {
 
     @FXML
     private Label successLabel;
-    
+
     private final AuthService authService;
-    
-    public LoginController() {
+
+    public RegisterController() {
         this.authService = new AuthService();
     }
-    
+
     @FXML
     private void initialize() {
         // Aplicar animación de entrada
         fadeInNode(formContainer, 1.0);
-        
+
         // Configurar listeners para validación
         usernameField.textProperty().addListener((obs, oldVal, newVal) -> {
             validateField(usernameField);
             hideMessages();
         });
-        
+
         passwordField.textProperty().addListener((obs, oldVal, newVal) -> {
             validateField(passwordField);
             hideMessages();
         });
-        
-        loginButton.setOnAction(event -> handleLogin());
+        rolField.textProperty().addListener((obs, oldVal, newVal )->{
+            validateField(rolField);
+            hideMessages();
+                });
+
+        registerButton.setOnAction(event -> handleRegister());
     }
 
-    private void handleLogin() {
+    private void handleRegister() {
         if (validateForm()) {
-            loginButton.setDisable(true);
+            registerButton.setDisable(true);
             hideMessages();
-            
-            Task<LoginResponse> loginTask = new Task<>() {
+
+            Task<RegisterResponse> RegisterTask = new Task<>() {
                 @Override
-                protected LoginResponse call() throws Exception {
-                    return authService.login(usernameField.getText(), passwordField.getText());
+                protected RegisterResponse call() throws Exception {
+                    return authService.register(usernameField.getText(), passwordField.getText(), rolField.getText());
                 }
             };
-            
-            loginTask.setOnSucceeded(e -> {
-                LoginResponse response = loginTask.getValue();
+
+            RegisterTask.setOnSucceeded(e -> {
+                RegisterResponse response = RegisterTask.getValue();
                 Platform.runLater(() -> {
                     if ("success".equals(response.getStatus())) {
-                        showSuccess("¡Usted se ha logueado correctamente!");
-                        // TODO: Guardar el token y redirigir a la página principal
+                        showSuccess("¡Registro exitoso!");
+
                     } else {
                         showError(usernameField, response.getMessage());
                     }
-                    loginButton.setDisable(false);
+                    registerButton.setDisable(false);
                 });
             });
-            
-            loginTask.setOnFailed(e -> {
+
+            RegisterTask.setOnFailed(e -> {
                 Platform.runLater(() -> {
                     showError(usernameField, "Error al conectar con el servidor");
-                    loginButton.setDisable(false);
+                    registerButton.setDisable(false);
                 });
             });
-            
-            new Thread(loginTask).start();
+
+            new Thread(RegisterTask).start();
         }
     }
-    
+
     private boolean validateForm() {
         boolean isValid = true;
-        
+
         if (usernameField.getText().trim().isEmpty()) {
             showError(usernameField, "Por favor ingrese su usuario");
             isValid = false;
         }
-        
+
         if (passwordField.getText().trim().isEmpty()) {
             showError(passwordField, "Por favor ingrese su contraseña");
             isValid = false;
         }
-        
+        if (rolField.getText().trim().isEmpty()) {
+            showError(rolField, "Por favor ingrese su rol");
+            isValid = false;
+        }
+
         return isValid;
     }
-    
+
     private void validateField(TextField field) {
         if (!field.getText().trim().isEmpty()) {
             field.setStyle("-fx-border-color: #2193b0; -fx-border-width: 0 0 2 0;");
@@ -116,18 +125,18 @@ public class LoginController {
             field.setStyle("-fx-border-color: transparent;");
         }
     }
-    
+
     private void hideMessages() {
         errorLabel.setVisible(false);
         successLabel.setVisible(false);
     }
-    
+
     private void showError(Control field, String message) {
         field.setStyle("-fx-border-color: #ff0000; -fx-border-width: 0 0 2 0;");
         errorLabel.setText(message);
         errorLabel.setVisible(true);
         successLabel.setVisible(false);
-        
+
         // Animación de shake para el campo con error
         shakeNode(field);
     }
@@ -139,7 +148,7 @@ public class LoginController {
         usernameField.setStyle("-fx-border-color: #2ecc71; -fx-border-width: 0 0 2 0;");
         passwordField.setStyle("-fx-border-color: #2ecc71; -fx-border-width: 0 0 2 0;");
     }
-    
+
     private void fadeInNode(Node node, double duration) {
         node.setOpacity(0);
         FadeTransition fadeTransition = new FadeTransition(Duration.seconds(duration), node);
@@ -147,16 +156,16 @@ public class LoginController {
         fadeTransition.setToValue(1.0);
         fadeTransition.play();
     }
-    
+
     private void shakeNode(Node node) {
         double originalX = node.getTranslateX();
         javafx.animation.Timeline timeline = new javafx.animation.Timeline(
-            new javafx.animation.KeyFrame(Duration.millis(0), new javafx.animation.KeyValue(node.translateXProperty(), originalX)),
-            new javafx.animation.KeyFrame(Duration.millis(100), new javafx.animation.KeyValue(node.translateXProperty(), originalX + 10)),
-            new javafx.animation.KeyFrame(Duration.millis(200), new javafx.animation.KeyValue(node.translateXProperty(), originalX - 10)),
-            new javafx.animation.KeyFrame(Duration.millis(300), new javafx.animation.KeyValue(node.translateXProperty(), originalX + 5)),
-            new javafx.animation.KeyFrame(Duration.millis(400), new javafx.animation.KeyValue(node.translateXProperty(), originalX))
+                new javafx.animation.KeyFrame(Duration.millis(0), new javafx.animation.KeyValue(node.translateXProperty(), originalX)),
+                new javafx.animation.KeyFrame(Duration.millis(100), new javafx.animation.KeyValue(node.translateXProperty(), originalX + 10)),
+                new javafx.animation.KeyFrame(Duration.millis(200), new javafx.animation.KeyValue(node.translateXProperty(), originalX - 10)),
+                new javafx.animation.KeyFrame(Duration.millis(300), new javafx.animation.KeyValue(node.translateXProperty(), originalX + 5)),
+                new javafx.animation.KeyFrame(Duration.millis(400), new javafx.animation.KeyValue(node.translateXProperty(), originalX))
         );
         timeline.play();
     }
-} 
+}
