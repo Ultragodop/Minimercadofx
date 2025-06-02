@@ -1,9 +1,9 @@
 package com.project.minimercadofx.services;
 
-import com.project.minimercadofx.models.LoginRequest;
-import com.project.minimercadofx.models.LoginResponse;
-import com.project.minimercadofx.models.RegisterRequest;
-import com.project.minimercadofx.models.RegisterResponse;
+import com.project.minimercadofx.models.Auth.LoginRequest;
+import com.project.minimercadofx.models.Auth.LoginResponse;
+import com.project.minimercadofx.models.Auth.RegisterRequest;
+import com.project.minimercadofx.models.Auth.RegisterResponse;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -39,9 +39,9 @@ public class AuthService {
         }
     }
 
-    public RegisterResponse register(String username, String password, String email) {
+    public RegisterResponse register(String username, String password, String rol) {
         try {
-            RegisterRequest request = new RegisterRequest(username, password, email);
+            RegisterRequest request = new RegisterRequest(username, password, rol);
             String requestBody = objectMapper.writeValueAsString(request);
 
             HttpRequest httpRequest = HttpRequest.newBuilder()

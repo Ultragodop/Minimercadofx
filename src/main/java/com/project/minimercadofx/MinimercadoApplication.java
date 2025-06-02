@@ -11,7 +11,7 @@ import java.util.Objects;
 public class MinimercadoApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(MinimercadoApplication.class.getResource("main.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(MinimercadoApplication.class.getResource("register.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles/main.css")).toExternalForm());
         stage.setTitle("MiniMercado FX");

@@ -1,15 +1,17 @@
-package com.project.minimercadofx.models;
+package com.project.minimercadofx.models.Auth;
 
-public class LoginRequest {
+public class RegisterRequest {
     private String username;
     private String password;
+    private String rol;
 
-    public LoginRequest() {
+    public RegisterRequest() {
     }
 
-    public LoginRequest(String username, String password) {
+    public RegisterRequest(String username, String password, String rol) {
         this.username = username;
         this.password = password;
+        this.rol = rol;
     }
 
     public String getUsername() {
@@ -26,5 +28,13 @@ public class LoginRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String email) {
+        this.rol = email;
     }
 } 

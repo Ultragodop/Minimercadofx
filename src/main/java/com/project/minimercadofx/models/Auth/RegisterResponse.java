@@ -1,13 +1,13 @@
-package com.project.minimercadofx.models;
+package com.project.minimercadofx.models.Auth;
 
-public class LoginResponse {
+public class RegisterResponse {
     private String status;
     private String message;
 
-    public LoginResponse() {
+    public RegisterResponse() {
     }
 
-    public LoginResponse(String status, String message) {
+    public RegisterResponse(String status, String message) {
         this.status = status;
         this.message = message;
     }

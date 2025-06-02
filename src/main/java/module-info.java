@@ -9,13 +9,16 @@ module com.project.minimercadofx {
     requires org.kordamp.ikonli.antdesignicons;
     requires org.kordamp.bootstrapfx.core;
     requires static org.kordamp.jipsy.annotations;
+    requires static lombok;
 
     opens com.project.minimercadofx to javafx.fxml;
     opens com.project.minimercadofx.controllers to javafx.fxml;
-    opens com.project.minimercadofx.models;
+    opens com.project.minimercadofx.models.bussines to javafx.fxml;
     
     exports com.project.minimercadofx;
     exports com.project.minimercadofx.controllers;
-    exports com.project.minimercadofx.models;
+
     exports com.project.minimercadofx.services;
+    exports com.project.minimercadofx.models.Auth;
+    opens com.project.minimercadofx.models.Auth;
 }
