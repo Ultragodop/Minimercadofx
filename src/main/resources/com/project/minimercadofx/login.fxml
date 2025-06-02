@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+<StackPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+         fx:controller="com.project.minimercadofx.controllers.LoginController"
+         style="-fx-background-color: linear-gradient(to bottom right, #2193b0, #6dd5ed);">
+    
+    <VBox alignment="CENTER" spacing="20.0" fx:id="formContainer">
+        <StackPane style="-fx-background-color: white; -fx-background-radius: 15;" 
+                  maxWidth="400" maxHeight="500">
+            <padding>
+                <Insets bottom="40.0" left="40.0" right="40.0" top="40.0"/>
+            </padding>
+            
+            <VBox spacing="25" alignment="CENTER">
+                <!-- Logo o Título -->
+                <Text text="Minimercado" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-fill: #2193b0;"/>
+                <Text text="Iniciar Sesión" style="-fx-font-size: 20; -fx-fill: #666666;"/>
+                
+                <!-- Campos de entrada -->
+                <VBox spacing="20">
+                    <VBox spacing="5">
+                        <TextField fx:id="usernameField" promptText="Usuario" 
+                                 style="-fx-background-color: transparent; -fx-border-color: #cccccc; -fx-border-width: 0 0 2 0;"
+                                 prefHeight="40"/>
+                    </VBox>
+                    
+                    <VBox spacing="5">
+                        <PasswordField fx:id="passwordField" promptText="Contraseña"
+                                     style="-fx-background-color: transparent; -fx-border-color: #cccccc; -fx-border-width: 0 0 2 0;"
+                                     prefHeight="40"/>
+                    </VBox>
+                    
+                    <!-- Mensajes -->
+                    <Label fx:id="errorLabel" textFill="RED" visible="false" wrapText="true"/>
+                    <Label fx:id="successLabel" textFill="#2ecc71" visible="false" wrapText="true" 
+                           style="-fx-font-size: 14; -fx-font-weight: bold;"/>
+                </VBox>
+                
+                <!-- Botón de login -->
+                <Button fx:id="loginButton" text="INGRESAR" 
+                        style="-fx-background-color: #2193b0; -fx-text-fill: white; -fx-font-weight: bold; 
+                               -fx-background-radius: 25; -fx-cursor: hand;"
+                        prefWidth="200" prefHeight="45"/>
+                
+            </VBox>
+        </StackPane>
+    </VBox>
+</StackPane> 

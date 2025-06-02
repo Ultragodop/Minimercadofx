@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<HBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.project.minimercadofx.controllers.MainController">
+
+    <!-- Menú Lateral -->
+    <VBox fx:id="sidebar" styleClass="sidebar" prefWidth="250" spacing="10">
+        <padding>
+            <Insets top="20" right="10" bottom="20" left="10"/>
+        </padding>
+
+        <!-- Logo y Título -->
+        <VBox alignment="CENTER" spacing="10">
+            <FontIcon iconLiteral="antf-shop-outlined:40:WHITE"/>
+            <Label text="MiniMercado" style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;"/>
+        </VBox>
+
+        <Separator/>
+
+        <!-- Botones de Navegación -->
+        <Button styleClass="nav-button" maxWidth="Infinity">
+            <graphic>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <FontIcon iconLiteral="antf-home-outlined:16:WHITE"/>
+                    <Label text="Inicio" style="-fx-text-fill: white;"/>
+                </HBox>
+            </graphic>
+        </Button>
+
+        <Button styleClass="nav-button" maxWidth="Infinity">
+            <graphic>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <FontIcon iconLiteral="antf-shopping-outlined:16:WHITE"/>
+                    <Label text="Productos" style="-fx-text-fill: white;"/>
+                </HBox>
+            </graphic>
+        </Button>
+
+        <Button styleClass="nav-button" maxWidth="Infinity">
+            <graphic>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <FontIcon iconLiteral="antf-shopping-cart-outlined:16:WHITE"/>
+                    <Label text="Ventas" style="-fx-text-fill: white;"/>
+                </HBox>
+            </graphic>
+        </Button>
+
+        <Region VBox.vgrow="ALWAYS"/>
+
+        <!-- Perfil de Usuario -->
+        <VBox styleClass="user-profile" spacing="5" alignment="CENTER">
+            <FontIcon iconLiteral="antf-user-outlined:32:WHITE"/>
+            <Label text="Admin" style="-fx-text-fill: white; -fx-font-weight: bold;"/>
+        </VBox>
+    </VBox>
+
+    <!-- Área de Contenido -->
+    <StackPane fx:id="contentArea" HBox.hgrow="ALWAYS" style="-fx-background-color: #f5f6fa;">
+    </StackPane>
+</HBox> 
