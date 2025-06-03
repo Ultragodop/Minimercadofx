@@ -35,10 +35,27 @@ public class Producto {
 
     private Integer idProveedor;
 
-
+    private String categoriaNombre;
+    private String proveedorNombre;
     private Boolean activo = true;
-
-    public Producto(Integer id) {
-        this.id = id;
+@Override
+    public String toString() {
+        return "Producto{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", descripcion='" + descripcion + '\'' +
+                ", precioCompra=" + precioCompra +
+                ", precioVenta=" + precioVenta +
+                ", fechaVencimiento=" + fechaVencimiento +
+                ", idCategoria=" + idCategoria +
+                ", stockActual=" + stockActual +
+                ", stockMinimo=" + stockMinimo +
+                ", idProveedor=" + idProveedor +
+                ", categoriaNombre='" + categoriaNombre + '\'' +
+                ", proveedorNombre='" + proveedorNombre + '\'' +
+                ", activo=" + activo +
+                '}';
     }
+
+
 }

@@ -51,6 +51,8 @@
                         style="-fx-background-color: #2193b0; -fx-text-fill: white; -fx-font-weight: bold;
                                -fx-background-radius: 25; -fx-cursor: hand;"
                         prefWidth="200" prefHeight="45"/>
+                <Button fx:id="loginButton" text="Ir a inicio de sesión"
+                        style="-fx-background-color: rgba(255,255,255,0.55);"/>
 
             </VBox>
         </StackPane>

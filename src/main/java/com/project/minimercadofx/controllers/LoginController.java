@@ -1,15 +1,21 @@
 package com.project.minimercadofx.controllers;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.animation.FadeTransition;
 import javafx.util.Duration;
 import javafx.scene.Node;
+import javafx.stage.Stage;
+import com.project.minimercadofx.MinimercadoApplication;
 import com.project.minimercadofx.services.AuthService;
 import com.project.minimercadofx.models.Auth.LoginResponse;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+
+import java.io.IOException;
 
 public class LoginController {
     @FXML
@@ -55,6 +61,7 @@ public class LoginController {
         });
         
         loginButton.setOnAction(event -> handleLogin());
+        registerButton.setOnAction(event -> handleRegister());
     }
 
     private void handleLogin() {
@@ -74,7 +81,15 @@ public class LoginController {
                 Platform.runLater(() -> {
                     if ("success".equals(response.getStatus())) {
                         showSuccess("¡Usted se ha logueado correctamente!");
-                        // TODO: Guardar el token y redirigir a la página principal
+                        try {
+                            FXMLLoader fxmlLoader = new FXMLLoader(MinimercadoApplication.class.getResource("main.fxml"));
+                            Scene scene = new Scene(fxmlLoader.load());
+                            Stage stage = (Stage) loginButton.getScene().getWindow();
+                            stage.setScene(scene);
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                            showError(loginButton, "Error al cargar la pantalla principal");
+                        }
                     } else {
                         showError(usernameField, response.getMessage());
                     }
@@ -90,6 +105,18 @@ public class LoginController {
             });
             
             new Thread(loginTask).start();
+        }
+    }
+
+    private void handleRegister() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(MinimercadoApplication.class.getResource("register.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+            Stage stage = (Stage) registerButton.getScene().getWindow();
+            stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showError(registerButton, "Error al cargar la pantalla de registro");
         }
     }
     

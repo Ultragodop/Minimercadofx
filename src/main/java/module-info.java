@@ -14,7 +14,7 @@ module com.project.minimercadofx {
     opens com.project.minimercadofx to javafx.fxml;
     opens com.project.minimercadofx.controllers to javafx.fxml;
     opens com.project.minimercadofx.models.bussines to javafx.fxml;
-    
+    exports com.project.minimercadofx.models.bussines to com.fasterxml.jackson.databind;
     exports com.project.minimercadofx;
     exports com.project.minimercadofx.controllers;
 

@@ -1,19 +1,25 @@
 package com.project.minimercadofx.controllers;
 
 
+import com.project.minimercadofx.MinimercadoApplication;
 import com.project.minimercadofx.models.Auth.RegisterResponse;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.animation.FadeTransition;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.Node;
 import com.project.minimercadofx.services.AuthService;
-import com.project.minimercadofx.models.Auth.LoginResponse;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 
+import java.io.IOException;
+
 public class RegisterController {
+    public Button loginButton;
     @FXML
     private TextField usernameField;
 
@@ -60,6 +66,8 @@ public class RegisterController {
                 });
 
         registerButton.setOnAction(event -> handleRegister());
+        loginButton.setOnAction(event -> handleLogin());
+
     }
 
     private void handleRegister() {
@@ -95,6 +103,17 @@ public class RegisterController {
             });
 
             new Thread(RegisterTask).start();
+        }
+    }
+    private void handleLogin() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(MinimercadoApplication.class.getResource("login.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+            Stage stage = (Stage) loginButton.getScene().getWindow();
+            stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showError(loginButton, "Error al cargar la pantalla de registro");
         }
     }
 
