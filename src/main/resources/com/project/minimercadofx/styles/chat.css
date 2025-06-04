@@ -75,9 +75,9 @@
     -fx-text-fill: black;
 }
 
-/* Burbuja de mensaje recibido (blanca) */
+/* Burbuja de mensaje recibido (verde claro) */
 .bubble.received {
-    -fx-background-color: white;
+    -fx-background-color: #DCF8C6;
     -fx-text-fill: black;
 }
 
