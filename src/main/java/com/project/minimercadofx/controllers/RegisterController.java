@@ -3,18 +3,18 @@ package com.project.minimercadofx.controllers;
 
 import com.project.minimercadofx.MinimercadoApplication;
 import com.project.minimercadofx.models.Auth.RegisterResponse;
+import com.project.minimercadofx.services.AuthService;
+import javafx.animation.FadeTransition;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
-import javafx.animation.FadeTransition;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import javafx.scene.Node;
-import com.project.minimercadofx.services.AuthService;
-import javafx.application.Platform;
-import javafx.concurrent.Task;
 
 import java.io.IOException;
 

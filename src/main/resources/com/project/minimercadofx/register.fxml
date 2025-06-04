@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.text.*?>
-
-
+<?import javafx.scene.text.Text?>
 <StackPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="com.project.minimercadofx.controllers.RegisterController"
            style="-fx-background-color: linear-gradient(to bottom right, #2193b0, #6dd5ed);">

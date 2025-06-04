@@ -1,21 +1,25 @@
 package com.project.minimercadofx.controllers;
 
+import com.project.minimercadofx.MinimercadoApplication;
+import com.project.minimercadofx.models.Auth.LoginResponse;
+import com.project.minimercadofx.models.bussines.Producto;
+import com.project.minimercadofx.services.AuthService;
+import com.project.minimercadofx.services.ProductService;
+import com.project.minimercadofx.services.http.Session;
+import javafx.animation.FadeTransition;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
-import javafx.animation.FadeTransition;
-import javafx.util.Duration;
-import javafx.scene.Node;
 import javafx.stage.Stage;
-import com.project.minimercadofx.MinimercadoApplication;
-import com.project.minimercadofx.services.AuthService;
-import com.project.minimercadofx.models.Auth.LoginResponse;
-import javafx.application.Platform;
-import javafx.concurrent.Task;
+import javafx.util.Duration;
 
 import java.io.IOException;
+import java.util.List;
 
 public class LoginController {
     @FXML
@@ -28,7 +32,8 @@ public class LoginController {
     
     @FXML
     private Button loginButton;
-    
+    @FXML
+    private Button productButton;
     @FXML
     private VBox formContainer;
 
@@ -39,9 +44,10 @@ public class LoginController {
     private Label successLabel;
     
     private final AuthService authService;
-    
+    private final ProductService productService;
     public LoginController() {
         this.authService = new AuthService();
+        this.productService = new ProductService();
     }
     
     @FXML
@@ -61,6 +67,7 @@ public class LoginController {
         });
         
         loginButton.setOnAction(event -> handleLogin());
+        productButton.setOnAction(event -> handleGetProducts());
         registerButton.setOnAction(event -> handleRegister());
     }
 
@@ -78,17 +85,20 @@ public class LoginController {
             
             loginTask.setOnSucceeded(e -> {
                 LoginResponse response = loginTask.getValue();
+
                 Platform.runLater(() -> {
                     if ("success".equals(response.getStatus())) {
                         showSuccess("¡Usted se ha logueado correctamente!");
+                        String token = response.getMessage();
+                        Session.setToken(token);
                         try {
-                            FXMLLoader fxmlLoader = new FXMLLoader(MinimercadoApplication.class.getResource("main.fxml"));
+                            FXMLLoader fxmlLoader = new FXMLLoader(MinimercadoApplication.class.getResource("Chat.fxml"));
                             Scene scene = new Scene(fxmlLoader.load());
                             Stage stage = (Stage) loginButton.getScene().getWindow();
                             stage.setScene(scene);
                         } catch (IOException ex) {
                             ex.printStackTrace();
-                            showError(loginButton, "Error al cargar la pantalla principal");
+                            showError(usernameField, "Error al cargar el chat");
                         }
                     } else {
                         showError(usernameField, response.getMessage());
@@ -106,6 +116,34 @@ public class LoginController {
             
             new Thread(loginTask).start();
         }
+    }
+    private void handleGetProducts() {
+        Task<Void> productTask = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+
+
+                List<Producto> productos= productService.getAllProducts();
+                for (Producto product : productos) {
+                    System.out.println(product);
+                }
+                return null;
+            }
+        };
+
+        productTask.setOnSucceeded(e -> {
+
+            System.out.println("Productos obtenidos correctamente");
+
+        });
+
+        productTask.setOnFailed(e -> {
+            // Aquí puedes manejar el error al obtener productos
+            System.err.println("Error al obtener productos: " + productTask.getException().getMessage());
+        });
+
+        new Thread(productTask).start();
+
     }
 
     private void handleRegister() {

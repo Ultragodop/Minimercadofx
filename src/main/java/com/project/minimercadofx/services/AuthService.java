@@ -1,14 +1,15 @@
 package com.project.minimercadofx.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.minimercadofx.models.Auth.LoginRequest;
 import com.project.minimercadofx.models.Auth.LoginResponse;
 import com.project.minimercadofx.models.Auth.RegisterRequest;
 import com.project.minimercadofx.models.Auth.RegisterResponse;
+
+import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.net.URI;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class AuthService {
     private static final String BASE_URL = "http://localhost:3050/api/auth";
