@@ -1,0 +1,113 @@
+/* ==========================
+   chat.css (estilo WhatsApp)
+   ========================== */
+
+/* Fondo general del contenedor */
+.chat-root {
+    -fx-background-color: #ECE5DD; /* color de fondo tipo WhatsApp */
+}
+
+/* ---------------------------
+   Cabecera ("Chat WebSocket")
+   --------------------------- */
+.header {
+    -fx-background-color: #075E54;   /* verde oscuro de WhatsApp */
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-padding: 10 0 10 0;
+    -fx-alignment: CENTER;
+    -fx-background-radius: 5;
+}
+
+/* ---------------------------
+   ScrollPane que encierra los mensajes
+   --------------------------- */
+.message-pane {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+/* Contenedor donde se agregan los Text (burbujas) */
+.messages-flow {
+    -fx-padding: 10;
+    -fx-vgap: 5; /* espacio vertical entre burbujas */
+}
+
+/* ============================
+   Estilo de cada “burbuja” de chat
+   ============================ */
+.bubble {
+    -fx-background-radius: 15;
+    -fx-padding: 6 10 6 10;
+    -fx-font-size: 14px;
+    -fx-wrap-text: true;
+}
+
+/* Burbuja de mensaje enviado (alineada a la derecha) */
+.bubble.sent {
+    -fx-background-color: #DCF8C6;  /* verde claro de burbujas enviadas */
+    -fx-text-fill: black;
+    -fx-alignment: CENTER_RIGHT;
+    /* Atención: la alineación horizontal (alinear al extremo derecho)
+       se gestiona mejor desde el código Java al envolver este Text
+       en un HBox con alignment=Pos.CENTER_RIGHT. */
+}
+
+/* Burbuja de mensaje recibido (alineada a la izquierda) */
+.bubble.received {
+    -fx-background-color: white;    /* fondo blanco para mensajes recibidos */
+    -fx-text-fill: black;
+    -fx-alignment: CENTER_LEFT;
+    /* La alineación izquierda también se maneja en el controlador
+       envolviendo en un HBox con alignment=Pos.CENTER_LEFT. */
+}
+
+/* ========================
+   Área de entrada (bottom)
+   ======================== */
+.input-area {
+    -fx-background-color: #F0F0F0; /* gris muy claro */
+    -fx-padding: 8;
+    -fx-background-radius: 5;
+}
+
+/* Campo de texto donde el usuario escribe */
+.text-input {
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-border-color: #CCCCCC;
+    -fx-font-size: 14px;
+}
+
+/* Botón “Enviar” */
+.send-button {
+    -fx-background-color: #25D366; /* verde WhatsApp */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 16 8 16;
+}
+
+.send-button:hover {
+    -fx-background-color: #128C7E; /* verde más oscuro al pasar el ratón */
+}
+
+/* ============================
+   Estilos adicionales opcionales
+   ============================ */
+
+/* Si deseas que el ScrollPane no muestre barra hasta que sea necesario */
+.message-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+/* Resaltar el TextArea cuando tenga foco */
+.text-input:focused {
+    -fx-border-color: #25D366;
+}
+
+/* Efecto al presionar el botón */
+.send-button:pressed {
+    -fx-background-color: #075E54;
+}

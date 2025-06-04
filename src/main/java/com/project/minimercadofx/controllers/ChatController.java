@@ -5,7 +5,10 @@ import com.project.minimercadofx.services.WebSocketService;
 import com.project.minimercadofx.services.chat.EncryptionUtils;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -47,14 +50,27 @@ public class ChatController {
             Platform.runLater(() -> {
                 Color color = obtenerColorUsuario(usuario);
                 String msjdecrypt = EncryptionUtils.decrypt(mensaje);
+
+                // Nombre en negrita y color asignado
                 Text nombre = new Text(usuario + ": ");
                 nombre.setFill(color);
-                nombre.setStyle("-fx-font-weight: bold");
+                nombre.setStyle("-fx-font-weight: bold;");
 
-                Text contenido = new Text(msjdecrypt + "\n");
+                // Contenido del mensaje
+                Text contenido = new Text(msjdecrypt);
                 contenido.setFill(Color.BLACK);
 
-                mensajesFlow.getChildren().addAll(nombre, contenido);
+                // Crear un TextFlow que contenga nombre + contenido
+                TextFlow bubbleFlow = new TextFlow(nombre, contenido);
+                bubbleFlow.getStyleClass().addAll("bubble", "received");
+                bubbleFlow.setMaxWidth(250); // máximo ancho para que el texto se ajuste en varias líneas
+
+                // Envolver en HBox alineado a la izquierda
+                HBox contenedor = new HBox(bubbleFlow);
+                contenedor.setAlignment(Pos.CENTER_LEFT);
+                contenedor.setPadding(new Insets(2, 0, 2, 50)); // margen derecho
+
+                mensajesFlow.getChildren().add(contenedor);
             });
         });
     }
@@ -63,8 +79,24 @@ public class ChatController {
     public void enviarMensaje() {
         String texto = TextArea.getText().trim();
         if (!texto.isEmpty()) {
-            String cifrado= EncryptionUtils.encrypt(texto);
+            // Mostrar nuestro propio mensaje como burbuja “sent”
+            Text contenido = new Text(texto);
+            contenido.setFill(Color.BLACK);
+
+            TextFlow bubbleFlow = new TextFlow(contenido);
+            bubbleFlow.getStyleClass().addAll("bubble", "sent");
+            bubbleFlow.setMaxWidth(250);
+
+            HBox contenedor = new HBox(bubbleFlow);
+            contenedor.setAlignment(Pos.CENTER_RIGHT);
+            contenedor.setPadding(new Insets(2, 50, 2, 0)); // margen izquierdo
+
+            mensajesFlow.getChildren().add(contenedor);
+
+            // Enviar el texto cifrado al servidor
+            String cifrado = EncryptionUtils.encrypt(texto);
             webSocketService.enviarMensaje(cifrado);
+
             TextArea.clear(); // Limpiar el campo luego de enviar
         }
     }
