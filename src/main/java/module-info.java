@@ -18,10 +18,12 @@ module com.project.minimercadofx {
     opens com.project.minimercadofx to javafx.fxml;
     opens com.project.minimercadofx.controllers to javafx.fxml;
     opens com.project.minimercadofx.models.bussines to javafx.fxml;
-
+    opens com.project.minimercadofx.models.chat to javafx.fxml, com.fasterxml.jackson.databind;
     exports com.project.minimercadofx.models.bussines to com.fasterxml.jackson.databind;
     exports com.project.minimercadofx;
     exports com.project.minimercadofx.controllers;
+    exports com.project.minimercadofx.services.http to com.fasterxml.jackson.databind;
+    exports com.project.minimercadofx.models.chat to com.fasterxml.jackson.databind;
 
     exports com.project.minimercadofx.services;
     exports com.project.minimercadofx.models.Auth;

@@ -1,112 +1,75 @@
 package com.project.minimercadofx.controllers;
 
+import com.project.minimercadofx.models.chat.User;
+import com.project.minimercadofx.services.WebSocketService;
+import com.project.minimercadofx.services.chat.EncryptionUtils;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
-import java.net.URI;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ChatController {
 
     @FXML
-    private TextField mensajeInput;
-    @FXML
-    private TextArea mensajesArea;
+    private TextFlow mensajesFlow;
 
-    private org.java_websocket.client.WebSocketClient webSocketClient;
+    @FXML
+    private TextArea TextArea;
+
+    private WebSocketService webSocketService;
+
+    private final Map<String, Color> usuarioColores = new HashMap<>();
+    private final List<Color> coloresDisponibles = Arrays.asList(
+            Color.BLUE, Color.GREEN, Color.ORANGE, Color.PURPLE, Color.BROWN, Color.DARKCYAN, Color.MAGENTA
+    );
+    private int colorIndex = 0;
+
+    private Color obtenerColorUsuario(String usuario) {
+        return usuarioColores.computeIfAbsent(usuario, u -> {
+            Color color = coloresDisponibles.get(colorIndex % coloresDisponibles.size());
+            colorIndex++;
+            return color;
+        });
+    }
 
     @FXML
     public void initialize() {
-        // Agregar listener para Enter en el campo de texto
-        mensajeInput.setOnAction(event -> enviarMensaje());
+        webSocketService = new WebSocketService(User.getNombre());
 
-        // Conectar al WebSocket
-        conectarWebSocket();
-    }
-
-    private void conectarWebSocket() {
-        try {
-            URI serverUri = new URI("ws://localhost:3050/chat");
-
-
+        webSocketService.conectar("ws://localhost:3050/chat", (usuario, mensaje) -> {
             Platform.runLater(() -> {
-                mensajesArea.appendText("Conectando al servidor...\n");
+                Color color = obtenerColorUsuario(usuario);
+                String msjdecrypt = EncryptionUtils.decrypt(mensaje);
+                Text nombre = new Text(usuario + ": ");
+                nombre.setFill(color);
+                nombre.setStyle("-fx-font-weight: bold");
+
+                Text contenido = new Text(msjdecrypt + "\n");
+                contenido.setFill(Color.BLACK);
+
+                mensajesFlow.getChildren().addAll(nombre, contenido);
             });
-
-            webSocketClient = new org.java_websocket.client.WebSocketClient(serverUri) {
-                @Override
-                public void onOpen(org.java_websocket.handshake.ServerHandshake handshake) {
-                    Platform.runLater(() -> {
-                        mensajesArea.appendText("✓ Conectado al servidor exitosamente\n");
-                    });
-                }
-
-                @Override
-                public void onMessage(String message) {
-                    Platform.runLater(() -> {
-                        mensajesArea.appendText("Servidor: " + message + "\n");
-                    });
-                }
-
-                @Override
-                public void onClose(int code, String reason, boolean remote) {
-                    Platform.runLater(() -> {
-                        mensajesArea.appendText("✗ Conexión cerrada: " + reason + "\n");
-                    });
-                }
-
-                @Override
-                public void onError(Exception ex) {
-                    Platform.runLater(() -> {
-                        mensajesArea.appendText("✗ Error: " + ex.getMessage() + "\n");
-                    });
-                }
-            };
-
-            webSocketClient.connect();
-
-        } catch (Exception e) {
-            Platform.runLater(() -> {
-                mensajesArea.appendText("✗ Error de conexión: " + e.getMessage() + "\n");
-            });
-        }
+        });
     }
 
     @FXML
     public void enviarMensaje() {
-        String mensaje = mensajeInput.getText().trim();
-
-        if (mensaje.isEmpty()) {
-            return;
-        }
-
-        if (webSocketClient == null || !webSocketClient.isOpen()) {
-            Platform.runLater(() -> {
-                mensajesArea.appendText("✗ No hay conexión al servidor\n");
-            });
-            return;
-        }
-
-        try {
-            webSocketClient.send(mensaje);
-            mensajeInput.clear();
-
-            Platform.runLater(() -> {
-                mensajesArea.appendText("Tú: " + mensaje + "\n");
-            });
-
-        } catch (Exception e) {
-            Platform.runLater(() -> {
-                mensajesArea.appendText("✗ Error al enviar mensaje: " + e.getMessage() + "\n");
-            });
+        String texto = TextArea.getText().trim();
+        if (!texto.isEmpty()) {
+            String cifrado= EncryptionUtils.encrypt(texto);
+            webSocketService.enviarMensaje(cifrado);
+            TextArea.clear(); // Limpiar el campo luego de enviar
         }
     }
 
-    // Método para limpiar recursos al cerrar
-    public void desconectar() {
-        if (webSocketClient != null && webSocketClient.isOpen()) {
-            webSocketClient.close();
-        }
+    public void cerrarChat() {
+        webSocketService.cerrarConexion();
     }
 }

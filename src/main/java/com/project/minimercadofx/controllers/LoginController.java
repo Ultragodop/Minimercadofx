@@ -7,6 +7,7 @@ import com.project.minimercadofx.services.AuthService;
 import com.project.minimercadofx.services.ProductService;
 import com.project.minimercadofx.services.http.Session;
 import javafx.animation.FadeTransition;
+import com.project.minimercadofx.models.chat.User;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -89,6 +90,8 @@ public class LoginController {
                 Platform.runLater(() -> {
                     if ("success".equals(response.getStatus())) {
                         showSuccess("¡Usted se ha logueado correctamente!");
+                        String username= usernameField.getText();
+                        User.setNombre(username);
                         String token = response.getMessage();
                         Session.setToken(token);
                         try {
