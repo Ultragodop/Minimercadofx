@@ -3,50 +3,43 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
-<VBox xmlns="http://javafx.com/javafx/17.0.12"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.project.minimercadofx.controllers.ChatController"
-      stylesheets="@styles/chat.css"
-      styleClass="chat-root"
-      alignment="TOP_CENTER"
-      spacing="10">
+<!--
+  Este FXML coincide con el ChatController que inyecta:
+    - @FXML ScrollPane scrollPane
+    - @FXML VBox mensajesContainer
+    - @FXML TextArea TextArea
+  y llama al método enviarMensaje() en el botón.
+-->
 
-    <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
-    </padding>
+<VBox spacing="0" styleClass="chat-root" stylesheets="@styles/chat.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.minimercadofx.controllers.ChatController">
 
-    <!-- Cabecera -->
-    <Label text="Chat WebSocket"
-           styleClass="header"
-           prefWidth="400"
-           alignment="CENTER"/>
+    <children>
+        <!-- 1) Cabecera fija -->
+        <Label alignment="CENTER" maxWidth="Infinity" styleClass="header" text="Chat WebSocket" />
 
-    <!-- Área principal de mensajes -->
-    <ScrollPane fitToWidth="true" fitToHeight="true" styleClass="message-pane">
-        <content>
-            <TextFlow fx:id="mensajesFlow"
-                      prefWidth="350"
-                      prefHeight="400"
-                      styleClass="messages-flow"/>
-        </content>
-    </ScrollPane>
+        <!-- 2) Área de mensajes (ScrollPane que crece con la ventana) -->
+        <ScrollPane fx:id="scrollPane" fitToWidth="true" hbarPolicy="NEVER" pannable="false" styleClass="message-pane" stylesheets="@styles/chat.css" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
+            <content>
+                <VBox fx:id="mensajesContainer" spacing="5" styleClass="mensajes-vbox" stylesheets="@styles/chat.css">
+                    <padding>
+                        <Insets bottom="10" left="10" right="10" top="10" />
+                    </padding>
+                </VBox>
+            </content>
+        </ScrollPane>
 
-    <!-- Área de entrada de texto y botón Enviar -->
-    <HBox alignment="CENTER_LEFT"
-          spacing="10"
-          styleClass="input-area">
+        <!-- 3) HBox de entrada de texto (siempre pegada al fondo) -->
+        <HBox alignment="CENTER_LEFT" spacing="10" styleClass="input-area">
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="10" />
+            </padding>
 
-        <TextArea fx:id="TextArea"
-                  prefWidth="300"
-                  prefHeight="40"
-                  promptText="Escribe un mensaje..."
-                  wrapText="true"
-                  styleClass="text-input"/>
+            <!-- TextArea para la entrada, con HBox.hgrow para ser responsivo -->
+            <TextArea fx:id="TextArea" prefRowCount="2" promptText="Escribe un mensaje..." styleClass="text-input" wrapText="true" HBox.hgrow="ALWAYS" />
 
-        <Button text="Enviar"
-                onAction="#enviarMensaje"
-                styleClass="send-button"/>
-    </HBox>
+            <!-- Botón que invoca al método enviarMensaje() -->
+            <Button onAction="#enviarMensaje" styleClass="send-button" text="Enviar" />
+        </HBox>
+    </children>
 </VBox>

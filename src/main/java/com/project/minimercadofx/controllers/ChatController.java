@@ -8,7 +8,9 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -21,10 +23,11 @@ import java.util.Map;
 public class ChatController {
 
     @FXML
-    private TextFlow mensajesFlow;
-
+    private ScrollPane scrollPane;           // <-- Inyección del ScrollPane
     @FXML
-    private TextArea TextArea;
+    private VBox mensajesContainer;          // <-- Inyección del contenedor de mensajes (VBox)
+    @FXML
+    private TextArea TextArea;               // <-- Inyección del TextArea de entrada
 
     private WebSocketService webSocketService;
 
@@ -44,6 +47,7 @@ public class ChatController {
 
     @FXML
     public void initialize() {
+        // Creamos la conexión WebSocket
         webSocketService = new WebSocketService(User.getNombre());
 
         webSocketService.conectar("ws://localhost:3050/chat", (usuario, mensaje) -> {
@@ -51,26 +55,29 @@ public class ChatController {
                 Color color = obtenerColorUsuario(usuario);
                 String msjdecrypt = EncryptionUtils.decrypt(mensaje);
 
-                // Nombre en negrita y color asignado
+                // Texto del nombre de usuario en negrita y color asignado
                 Text nombre = new Text(usuario + ": ");
                 nombre.setFill(color);
                 nombre.setStyle("-fx-font-weight: bold;");
 
-                // Contenido del mensaje
-                Text contenido = new Text(msjdecrypt);
-                contenido.setFill(Color.BLACK);
+                // Texto del contenido del mensaje
+                Text texto = new Text(msjdecrypt);
+                texto.setFill(Color.BLACK);
 
-                // Crear un TextFlow que contenga nombre + contenido
-                TextFlow bubbleFlow = new TextFlow(nombre, contenido);
+                // Creamos el TextFlow que contendrá nombre + contenido
+                TextFlow bubbleFlow = new TextFlow(nombre, texto);
                 bubbleFlow.getStyleClass().addAll("bubble", "received");
-                bubbleFlow.setMaxWidth(250); // máximo ancho para que el texto se ajuste en varias líneas
+                bubbleFlow.setMaxWidth(250); // ancho máximo para hacer wrap automático
 
-                // Envolver en HBox alineado a la izquierda
+                // Envolvemos en HBox alineado a la izquierda
                 HBox contenedor = new HBox(bubbleFlow);
                 contenedor.setAlignment(Pos.CENTER_LEFT);
-                contenedor.setPadding(new Insets(2, 0, 2, 50)); // margen derecho
+                contenedor.setPadding(new Insets(2, 50, 2, 0)); // margen derecho
 
-                mensajesFlow.getChildren().add(contenedor);
+                mensajesContainer.getChildren().add(contenedor);
+
+                // Forzamos el ScrollPane a bajar hasta el final
+                scrollToBottom();
             });
         });
     }
@@ -79,7 +86,7 @@ public class ChatController {
     public void enviarMensaje() {
         String texto = TextArea.getText().trim();
         if (!texto.isEmpty()) {
-            // Mostrar nuestro propio mensaje como burbuja “sent”
+            // Primero mostramos la burbuja “sent” en el propio cliente
             Text contenido = new Text(texto);
             contenido.setFill(Color.BLACK);
 
@@ -89,16 +96,25 @@ public class ChatController {
 
             HBox contenedor = new HBox(bubbleFlow);
             contenedor.setAlignment(Pos.CENTER_RIGHT);
-            contenedor.setPadding(new Insets(2, 50, 2, 0)); // margen izquierdo
+            contenedor.setPadding(new Insets(2, 0, 2, 50)); // margen izquierdo
 
-            mensajesFlow.getChildren().add(contenedor);
+            mensajesContainer.getChildren().add(contenedor);
+            scrollToBottom();
 
-            // Enviar el texto cifrado al servidor
+            // Ahora enviamos el texto cifrado al servidor
             String cifrado = EncryptionUtils.encrypt(texto);
             webSocketService.enviarMensaje(cifrado);
 
-            TextArea.clear(); // Limpiar el campo luego de enviar
+            TextArea.clear();
         }
+    }
+
+    /**
+     * Método auxiliar para forzar que el ScrollPane baje hasta el final
+     * (Vvalue = 1.0 significa scroll completamente abajo).
+     */
+    private void scrollToBottom() {
+        Platform.runLater(() -> scrollPane.setVvalue(1.0));
     }
 
     public void cerrarChat() {
