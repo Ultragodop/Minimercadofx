@@ -95,7 +95,7 @@ public class LoginController {
                         String token = response.getMessage();
                         Session.setToken(token);
                         try {
-                            FXMLLoader fxmlLoader = new FXMLLoader(MinimercadoApplication.class.getResource("Chat.fxml"));
+                            FXMLLoader fxmlLoader = new FXMLLoader(MinimercadoApplication.class.getResource("proveedor.fxml"));
                             Scene scene = new Scene(fxmlLoader.load());
                             Stage stage = (Stage) loginButton.getScene().getWindow();
                             stage.setScene(scene);
@@ -103,6 +103,7 @@ public class LoginController {
                             ex.printStackTrace();
                             showError(usernameField, "Error al cargar el chat");
                         }
+
                     } else {
                         showError(usernameField, response.getMessage());
                     }

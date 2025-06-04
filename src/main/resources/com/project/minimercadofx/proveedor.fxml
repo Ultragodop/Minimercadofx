@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.minimercadofx.controllers.ProveedorController">
+   <VBox prefHeight="200.0" prefWidth="100.0">
+      <HBox prefHeight="100.0" prefWidth="581.0">
+         <TextField fx:id="nombre" alignment="BOTTOM_LEFT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="269.0" text="Nombre" />
+         <TextField fx:id="direccion" alignment="BOTTOM_LEFT" layoutX="10.0" layoutY="10.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="269.0" text="Direccion" />
+         <TextField fx:id="email" alignment="BOTTOM_LEFT" layoutX="279.0" layoutY="10.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="269.0" text="Email" />
+         <TextField fx:id="telefono" alignment="BOTTOM_LEFT" layoutX="10.0" layoutY="10.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="269.0" text="Telefono" />
+         <TextField fx:id="activo" alignment="BOTTOM_LEFT" layoutX="10.0" layoutY="10.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="269.0" text="Activo" />
+      </HBox>
+      <Button fx:id="agregar" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" text="Agregar" />
+   </VBox>
+</StackPane>
