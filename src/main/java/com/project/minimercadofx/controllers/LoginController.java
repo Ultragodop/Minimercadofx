@@ -94,8 +94,7 @@ public class LoginController {
                         User.setNombre(username);
                         String token = response.getMessage();
                         Session.setToken(token);
-                        try {
-                            FXMLLoader fxmlLoader = new FXMLLoader(MinimercadoApplication.class.getResource("proveedor.fxml"));
+                        try {                            FXMLLoader fxmlLoader = new FXMLLoader(MinimercadoApplication.class.getResource("chat.fxml"));
                             Scene scene = new Scene(fxmlLoader.load());
                             Stage stage = (Stage) loginButton.getScene().getWindow();
                             stage.setScene(scene);

@@ -11,7 +11,7 @@ public class HttpClientHelper {
      * Envía una petición HTTP (GET, POST, PUT, DELETE, etc.) al endpoint indicado.
      * Si existe un token JWT en Session, lo añade automáticamente en el header Authorization.
      *
-     * @param endpoint La URL completa del endpoint (p. ej. "http://localhost:3050/api/inventario")
+     * @param endpoint La URL completa del endpoint (p. ej. "http://192.168.0.45/api/inventario")
      * @param method   El método HTTP ("GET", "POST", "PUT", "DELETE", etc.)
      * @param jsonBody El cuerpo JSON (solo para POST/PUT; para GET o DELETE pásalo null)
      * @return El cuerpo de la respuesta como String

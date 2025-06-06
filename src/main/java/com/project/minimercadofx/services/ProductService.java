@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ProductService {
 
-    private static final String BASE_URL = "http://localhost:3050/api/inventario";
+    private static final String BASE_URL = "http://192.168.0.45:3050/api/inventario";
     private final HttpClientHelper httpClientHelper;
     private final ObjectMapper objectMapper;
 
