@@ -11,28 +11,30 @@ public class WebSocketService {
 
     private WebSocketClient client;
     private final ObjectMapper mapper = new ObjectMapper();
-    private String usuario;
+    private final String usuario;
+    private final String sala;
     private BiConsumer<String, String> onMensajeRecibido;
     private ChatMessage chatMessage;
-    public WebSocketService(String usuario) {
-        this.usuario = usuario;
 
+    public WebSocketService(String usuario, String sala) {
+        this.usuario = usuario;
+        this.sala = sala;
     }
 
-    public void conectar(String wsUri, BiConsumer<String, String> onMensajeRecibidoCallback) {
+    public void conectar(String uriConsala, BiConsumer<String, String> onMensajeRecibidoCallback) {
         this.onMensajeRecibido = onMensajeRecibidoCallback;
 
         try {
-            client = new WebSocketClient(new URI(wsUri)) {
+            client = new WebSocketClient(new URI(uriConsala)) {
                 @Override
                 public void onOpen(ServerHandshake handshakedata) {
-                    System.out.println("✓ Conectado al servidor");
+                    System.out.println("✓ Conectado a la sala: " + sala);
                 }
 
                 @Override
                 public void onMessage(String message) {
                     try {
-                         chatMessage= mapper.readValue(message, ChatMessage.class);
+                        chatMessage = mapper.readValue(message, ChatMessage.class);
                         if (onMensajeRecibido != null) {
                             onMensajeRecibido.accept(chatMessage.getUsuario(), chatMessage.getMensaje());
                         }
@@ -43,19 +45,19 @@ public class WebSocketService {
 
                 @Override
                 public void onClose(int code, String reason, boolean remote) {
-                    System.out.println("✗ Conexión cerrada: " + reason);
+                    System.out.println("✗ Conexión cerrada (" + sala + "): " + reason);
                 }
 
                 @Override
                 public void onError(Exception ex) {
-                    System.err.println("✗ Error: " + ex.getMessage());
+                    System.err.println("✗ Error en sala (" + sala + "): " + ex.getMessage());
                 }
             };
 
             client.connect();
 
         } catch (Exception e) {
-            System.err.println("✗ Error al conectar: " + e.getMessage());
+            System.err.println("✗ Error al conectar en sala (" + sala + "): " + e.getMessage());
         }
     }
 
@@ -69,7 +71,7 @@ public class WebSocketService {
                 System.err.println("✗ Error al enviar mensaje: " + e.getMessage());
             }
         } else {
-            System.err.println("✗ No hay conexión al servidor");
+            System.err.println("✗ No hay conexión al servidor en sala: " + sala);
         }
     }
 

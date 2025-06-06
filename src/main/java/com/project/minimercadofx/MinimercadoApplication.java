@@ -18,11 +18,11 @@ public class MinimercadoApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MinimercadoApplication.class.getResource("login.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
+        Scene scene = new Scene(fxmlLoader.load(), 800, 600);
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles/main.css")).toExternalForm());
         stage.setTitle("MiniMercado FX");
-        stage.setMinWidth(1000);
-        stage.setMinHeight(600);
+        stage.setMinWidth(640);
+        stage.setMinHeight(480);
         stage.setScene(scene);
         stage.show();
     }

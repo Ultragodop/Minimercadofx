@@ -1,17 +1,23 @@
 package com.project.minimercadofx.models.chat;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 
 public class User {
+    private static Long id;
     private static String nombre;
-    public static void setNombre(String nombre) {
-        User.nombre = nombre;
+
+    public static Long getId() {
+        return id;
     }
+
+    public static void setId(Long id) {
+        User.id = id;
+    }
+
     public static String getNombre() {
         return nombre;
+    }
+
+    public static void setNombre(String nombre) {
+        User.nombre = nombre;
     }
 }
