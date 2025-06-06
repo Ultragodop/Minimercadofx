@@ -4,12 +4,28 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
-@Getter
-@Setter
+
 public class CrearSalaRequest {
     private String nombre;
     private Long creadorId;
     private List<Long> usuariosAutorizadosIds;
 
-    // Getters y setters
+  public String getNombre() {
+      return nombre;
+  }
+  public void setNombre(String nombre) {
+      this.nombre = nombre;
+  }
+  public Long getCreadorId() {
+      return creadorId;
+  }
+  public void setCreadorId(Long creadorId) {
+      this.creadorId = creadorId;
+  }
+  public List<Long> getUsuariosAutorizadosIds() {
+      return usuariosAutorizadosIds;
+  }
+  public void setUsuariosAutorizadosIds(List<Long> usuariosAutorizadosIds) {
+      this.usuariosAutorizadosIds = usuariosAutorizadosIds;
+  }
 }
