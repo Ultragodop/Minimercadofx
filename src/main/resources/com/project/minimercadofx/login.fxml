@@ -1,57 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Text?>
-<StackPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="com.project.minimercadofx.controllers.LoginController"
-           style="-fx-background-color: linear-gradient(to bottom right, #2193b0, #6dd5ed);">
+<?import javafx.scene.text.*?>
 
-    <VBox alignment="CENTER" spacing="20.0" fx:id="formContainer">
-        <StackPane style="-fx-background-color: white; -fx-background-radius: 15;"
-                   maxWidth="400" maxHeight="500">
+<StackPane style="-fx-background-color: linear-gradient(to bottom right, #6e974f, #DCF8C6);" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.minimercadofx.controllers.LoginController">
+
+    <VBox fx:id="formContainer" alignment="CENTER" spacing="20.0">
+        <StackPane maxHeight="500" maxWidth="400" style="-fx-background-color: white; -fx-background-radius: 15;">
             <padding>
-                <Insets bottom="40.0" left="40.0" right="40.0" top="40.0"/>
+                <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
             </padding>
 
-            <VBox spacing="25" alignment="CENTER">
+            <VBox alignment="CENTER" spacing="25">
                 <!-- Logo o Título -->
-                <Text text="Minimercado" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-fill: #2193b0;"/>
-                <Text text="Inicio de sesion" style="-fx-font-size: 20; -fx-fill: #666666;"/>
+                <Text style="-fx-font-size: 28; -fx-font-weight: bold; -fx-fill: #6fa353;" text="Chat" />
+                <Text style="-fx-font-size: 20; -fx-fill: #666666;" text="Inicio de sesion" />
 
                 <!-- Campos de entrada -->
                 <VBox spacing="20">
                     <VBox spacing="5">
-                        <TextField fx:id="usernameField" promptText="Usuario"
-                                   style="-fx-background-color: transparent; -fx-border-color: #cccccc; -fx-border-width: 0 0 2 0;"
-                                   prefHeight="40"/>
+                        <TextField fx:id="usernameField" prefHeight="40" promptText="Usuario" style="-fx-background-color: transparent; -fx-border-color: #cccccc; -fx-border-width: 0 0 2 0;" />
                     </VBox>
 
                     <VBox spacing="5">
-                        <PasswordField fx:id="passwordField" promptText="Contraseña"
-                                       style="-fx-background-color: transparent; -fx-border-color: #cccccc; -fx-border-width: 0 0 2 0;"
-                                       prefHeight="40"/>
+                        <PasswordField fx:id="passwordField" prefHeight="40" promptText="Contraseña" style="-fx-background-color: transparent; -fx-border-color: #cccccc; -fx-border-width: 0 0 2 0;" />
                     </VBox>
 
 
                     <!-- Mensajes -->
-                    <Label fx:id="errorLabel" textFill="RED" visible="false" wrapText="true"/>
-                    <Label fx:id="successLabel" textFill="#2ecc71" visible="false" wrapText="true"
-                           style="-fx-font-size: 14; -fx-font-weight: bold;"/>
+                    <Label fx:id="errorLabel" textFill="RED" visible="false" wrapText="true" />
+                    <Label fx:id="successLabel" style="-fx-font-size: 14; -fx-font-weight: bold;" textFill="#2ecc71" visible="false" wrapText="true" />
                 </VBox>
 
-                <Button fx:id="loginButton" text="Iniciar sesión"
-                        style="-fx-background-color: #2193b0; -fx-text-fill: white; -fx-font-weight: bold;
-                               -fx-background-radius: 25; -fx-cursor: hand;"
-                        prefWidth="200" prefHeight="45"/>
-                <Button fx:id="productButton" text="Prueba de Producto"
-                        style="-fx-background-color: #2193b0; -fx-text-fill: white; -fx-font-weight: bold;
-                               -fx-background-radius: 25; -fx-cursor: hand;"
-                        prefWidth="200" prefHeight="45"/>
-                <Button fx:id="registerButton" text="Registrarse"
-                        style="-fx-background-color: rgba(255,255,255,0.55);"/>
+                <Button fx:id="loginButton" prefHeight="45" prefWidth="200" style="-fx-background-color: #6fa353; -fx-text-fill: white; -fx-font-weight: bold;                                -fx-background-radius: 25; -fx-cursor: hand;" text="Iniciar sesión" />
+                <Button fx:id="productButton" prefHeight="45" prefWidth="200" style="-fx-background-color: #6fa353; -fx-text-fill: white; -fx-font-weight: bold;                                -fx-background-radius: 25; -fx-cursor: hand;" text="Prueba de Producto" />
+                <Button fx:id="registerButton" style="-fx-background-color: #DCF8C6;" text="Registrarse" />
 
             </VBox>
         </StackPane>

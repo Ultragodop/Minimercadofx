@@ -49,7 +49,7 @@ public class ChatController {
     public void initialize() {
         // Creamos la conexión WebSocket
         webSocketService = new WebSocketService(User.getNombre());
-        webSocketService.conectar("ws://localhost:3050/chat", (usuario, mensaje) -> {
+        webSocketService.conectar("ws://25.34.193.207:3050/chat", (usuario, mensaje) -> {
             if(usuario.equals(User.getNombre())) {
                 return; // aca ignoro el puto mensaje que yo mismo envie
             }

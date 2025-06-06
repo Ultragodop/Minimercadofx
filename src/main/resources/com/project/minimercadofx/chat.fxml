@@ -16,7 +16,7 @@
 
     <children>
         <!-- 1) Cabecera fija -->
-        <Label alignment="CENTER" maxWidth="Infinity" styleClass="header" text="Chat WebSocket" />
+        <Label alignment="CENTER" maxWidth="Infinity" styleClass="header" text="Chat entre bellakos cifrada de extremo a extremo" />
 
         <!-- 2) Área de mensajes (ScrollPane que crece con la ventana) -->
         <ScrollPane fx:id="scrollPane" fitToWidth="true" hbarPolicy="NEVER" pannable="false" styleClass="message-pane" stylesheets="@styles/chat.css" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">

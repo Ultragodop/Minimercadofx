@@ -18,8 +18,8 @@
 
             <VBox spacing="25" alignment="CENTER">
                 <!-- Logo o Título -->
-                <Text text="Minimercado" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-fill: #2193b0;"/>
-                <Text text="Registrar" style="-fx-font-size: 20; -fx-fill: #666666;"/>
+                <Text text="Chat" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-fill: #6fa353;"/>
+                <Text text="Registrar" style="-fx-font-size: 20; -fx-fill: #6fa353;"/>
 
                 <!-- Campos de entrada -->
                 <VBox spacing="20">
@@ -47,11 +47,11 @@
                 </VBox>
 
                 <Button fx:id="registerButton" text="Registrarse"
-                        style="-fx-background-color: #2193b0; -fx-text-fill: white; -fx-font-weight: bold;
+                        style="-fx-background-color: #6fa353; -fx-text-fill: white; -fx-font-weight: bold;
                                -fx-background-radius: 25; -fx-cursor: hand;"
                         prefWidth="200" prefHeight="45"/>
                 <Button fx:id="loginButton" text="Ir a inicio de sesión"
-                        style="-fx-background-color: rgba(255,255,255,0.55);"/>
+                        style="-fx-background-color:#6fa353;"/>
 
             </VBox>
         </StackPane>
