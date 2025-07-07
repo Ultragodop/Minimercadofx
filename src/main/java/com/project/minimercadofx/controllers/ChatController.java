@@ -32,7 +32,7 @@ import java.util.*;
 
 public class ChatController {
 
-
+    String token= "Sexo";
     @FXML private ComboBox<String> salaComboBox;
     @FXML private ScrollPane scrollPane;
     @FXML private VBox mensajesContainer;
@@ -60,10 +60,11 @@ public class ChatController {
         // 1) Antes de cualquier otra cosa, llamamos al backend para listar salas
         new Thread(() -> {
             try {
-                // Cambiá el puerto si tu Spring Boot no corre en 8080
+               String token= "Sexo";
                 HttpClient client = HttpClient.newHttpClient();
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(new URI("http://localhost:3050/api/salas/todas"))
+                        .header("Authorization", "Bearer " + token)
                         .GET()
                         .build();
 
@@ -74,7 +75,8 @@ public class ChatController {
                     // Parseamos JSON Array de strings: ["general","programadores",...]
                     ObjectMapper mapper = new ObjectMapper();
                     List<String> listaSalas = mapper.readValue(
-                            response.body(), new TypeReference<List<String>>() {}
+                            response.body(), new TypeReference<>() {
+                            }
                     );
 
                     Platform.runLater(() -> {
@@ -148,8 +150,8 @@ public class ChatController {
 
     private void conectarASala(String sala) {
         webSocketService = new WebSocketService(User.getNombre(), sala);
+        String uri = "ws://localhost:3050/chat/" + sala + "?token=" + token;
 
-        String uri = "ws://localhost:3050/chat/" + sala;
         webSocketService.conectar(uri, (usuario, mensaje) -> {
             if (usuario.equals(User.getNombre())) return;
             Platform.runLater(() -> {
@@ -277,6 +279,7 @@ public class ChatController {
                             HttpRequest request = HttpRequest.newBuilder()
                                     .uri(new URI("http://localhost:3050/api/salas/crear"))
                                     .header("Content-Type", "application/json")
+                                    .header("Authorization", "Bearer " + token)
                                     .POST(HttpRequest.BodyPublishers.ofString(json))
                                     .build();
 
@@ -311,6 +314,7 @@ public class ChatController {
             System.out.println(url);
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(new URI(url))
+                    .header("Authorization", "Bearer " + token)
                     .GET()
                     .build();
 

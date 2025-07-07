@@ -2,37 +2,45 @@ package com.project.minimercadofx.services;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.minimercadofx.models.bussines.Producto;
-import com.project.minimercadofx.services.http.HttpClientHelper;
+
+import com.project.minimercadofx.models.bussines.ProductoDTO;
+import com.project.minimercadofx.services.http.Session;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.List;
-
-
 
 
 public class ProductService {
 
-    private static final String BASE_URL = "http://192.168.0.45:3050/api/inventario";
-    private final HttpClientHelper httpClientHelper;
+    private static final String BASE_URL = "http://localhost:3050/api/inventario";
+    private final HttpClient httpClientHelper;
     private final ObjectMapper objectMapper;
 
     public ProductService() {
-        this.httpClientHelper = new HttpClientHelper();
+        this.httpClientHelper = HttpClient.newHttpClient();
         this.objectMapper = new ObjectMapper();
 
     }
+    public ProductoDTO[] getAllProducts() throws IOException, InterruptedException {
+    HttpRequest httpRequest = HttpRequest.newBuilder()
+            .uri(URI.create(BASE_URL + "/todos-productos"))
+            .header("Content-Type", "application/json")
+            .header("Authorization", "Bearer " + Session.getToken())
+            .GET()
+            .build();
 
-public List<Producto> getAllProducts() throws IOException {
-        String response = httpClientHelper.sendRequest(BASE_URL + "/todos-productos", "GET", null);
-        return objectMapper.readValue(response, new TypeReference<>() {
-        });
-}
-public Producto createProduct(Producto producto) throws IOException {
-        String json = objectMapper.writeValueAsString(producto);
-        String response = httpClientHelper.sendRequest(BASE_URL + "/productos/create", "POST", json);
-        return objectMapper.readValue(response, Producto.class);
+    String response = httpClientHelper.send(httpRequest, HttpResponse.BodyHandlers.ofString()).body();
+    ProductoDTO[] productos = objectMapper.readValue(response, ProductoDTO[].class);
+    for (ProductoDTO producto : productos) {
+        System.out.println("Producto: " + producto.getNombre() + ", Precio: " + producto.getPrecioVenta());
     }
+
+      return productos ;
+}
 }
 
 

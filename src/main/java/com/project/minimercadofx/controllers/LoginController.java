@@ -2,9 +2,11 @@ package com.project.minimercadofx.controllers;
 
 import com.project.minimercadofx.MinimercadoApplication;
 import com.project.minimercadofx.models.Auth.LoginResponse;
-import com.project.minimercadofx.models.bussines.Producto;
+
+import com.project.minimercadofx.models.bussines.ProductoDTO;
 import com.project.minimercadofx.services.AuthService;
 import com.project.minimercadofx.services.ProductService;
+
 import com.project.minimercadofx.services.http.Session;
 import javafx.animation.FadeTransition;
 import com.project.minimercadofx.models.chat.User;
@@ -20,7 +22,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
-import java.util.List;
+
 
 public class LoginController {
     @FXML
@@ -66,6 +68,7 @@ public class LoginController {
             hideMessages();
         });
 
+        
         loginButton.setOnAction(event -> handleLogin());
         productButton.setOnAction(event -> handleGetProducts());
         registerButton.setOnAction(event -> handleRegister());
@@ -92,16 +95,18 @@ public class LoginController {
                         String username= usernameField.getText();
 
                         User.setNombre(username);
-                        System.out.println(User.getNombre());
-                        String token = response.getMessage();
-                        Session.setToken(token);
-                        try {                            FXMLLoader fxmlLoader = new FXMLLoader(MinimercadoApplication.class.getResource("chat.fxml"));
+
+
+
+                        try {
+                            FXMLLoader fxmlLoader = new FXMLLoader(MinimercadoApplication.class.getResource("proveedor.fxml"));
                             Scene scene = new Scene(fxmlLoader.load());
                             Stage stage = (Stage) loginButton.getScene().getWindow();
                             stage.setScene(scene);
-                        } catch (IOException ex) {
+                            System.out.println("Usuario logueado: " + username + " con token: " + Session.getToken());
+                        } catch (Exception ex) {
                             ex.printStackTrace();
-                            showError(usernameField, "Error al cargar el chat");
+                            showError(usernameField, "Error al cargar la pantalla principal");
                         }
 
                     } else {
@@ -127,10 +132,12 @@ public class LoginController {
             protected Void call() throws Exception {
 
 
-                List<Producto> productos= productService.getAllProducts();
-                for (Producto product : productos) {
-                    System.out.println(product);
-                }
+             ProductoDTO[] p =productService.getAllProducts();
+             for (ProductoDTO producto : p) {
+                 System.out.println("Producto: " + producto.getNombre() + ", Precio: " + producto.getPrecioVenta());
+
+             }
+
                 return null;
             }
         };

@@ -18,25 +18,24 @@ public class HttpClientHelper {
      * @throws IOException Si hay error de conexión o lectura
      */
     public String sendRequest(String endpoint, String method, String jsonBody) throws IOException {
-        // 1) Construir la URL y abrir la conexión
+
         long startTime = System.currentTimeMillis();
         URL url = new URL(endpoint);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-        // 2) Configurar método y headers básicos
-        connection.setRequestMethod(method.toUpperCase());
+
+        connection.setRequestMethod(method);
         connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
 
-        // 3) Leer el token de Session (si existe) y agregar al header Authorization
+
         String jwt = Session.getToken();
         if (jwt != null && !jwt.isEmpty()) {
             connection.setRequestProperty("Authorization", "Bearer " + jwt);
+
             System.out.println("[HttpClientHelper] Header Authorization agregado: Bearer " + jwt);
         } else {
             System.out.println("[HttpClientHelper] No hay token en Session; no se agrega header Authorization.");
         }
-
-        // 4) Si es POST o PUT y hay un JSON en jsonBody, escribirlo en el OutputStream
         if ((method.equalsIgnoreCase("POST") || method.equalsIgnoreCase("PUT")) && jsonBody != null) {
             connection.setDoOutput(true);
             try (OutputStream os = connection.getOutputStream()) {
@@ -44,12 +43,10 @@ public class HttpClientHelper {
                 os.write(input, 0, input.length);
             }
         }
-
-        // 5) Forzar la conexión y obtener código de respuesta
         int responseCode = connection.getResponseCode();
         System.out.println("[HttpClientHelper] URL: " + endpoint + "  Método: " + method + "  Código HTTP: " + responseCode);
 
-        // 6) Seleccionar InputStream o ErrorStream según responseCode
+
         InputStream is = (responseCode >= 200 && responseCode < 300)
                 ? connection.getInputStream()
                 : connection.getErrorStream();

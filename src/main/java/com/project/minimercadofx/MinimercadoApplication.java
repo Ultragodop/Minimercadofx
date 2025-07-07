@@ -21,9 +21,8 @@ public class MinimercadoApplication extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 800, 600);
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles/main.css")).toExternalForm());
         stage.setTitle("MiniMercado FX");
-        stage.setMinWidth(640);
-        stage.setMinHeight(480);
         stage.setScene(scene);
+        stage.setResizable(true);
         stage.show();
     }
 }

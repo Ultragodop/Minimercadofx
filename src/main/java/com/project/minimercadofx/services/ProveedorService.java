@@ -1,7 +1,6 @@
 package com.project.minimercadofx.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.minimercadofx.models.bussines.Producto;
 import com.project.minimercadofx.models.bussines.Proveedor;
 import com.project.minimercadofx.services.http.HttpClientHelper;
 
@@ -15,11 +14,11 @@ public class ProveedorService {
         this.httpClientHelper = new HttpClientHelper();
         this.objectMapper = new ObjectMapper();
     }
-    public Proveedor agregarProveedor(Proveedor proveedor) throws IOException {
+    public String  agregarProveedor(Proveedor proveedor) throws IOException {
         String json = objectMapper.writeValueAsString(proveedor);
         System.out.println(json);
         String response = httpClientHelper.sendRequest(BASE_URL + "/create", "POST", json);
-        return objectMapper.readValue(response, Proveedor.class);
+        return response;
 
 
 
