@@ -10,7 +10,7 @@
          src/main/resources/com/project/minimercadofx/styles/whatsapp-bg.png
        Puedes descargar cualquier wallpaper de WhatsApp (por ejemplo un tile verde claro con iconos suaves).
     */
-    -fx-background-image: url("bg.jpg");
+    -fx-background-image: url("../../../../../java/com/project/minimercadofx/bg.jpg");
     -fx-background-repeat: repeat;
     -fx-background-size: auto; /* que se repita en mosaico */
     -fx-padding: 0;
@@ -44,7 +44,7 @@
    ----------------------------------------------------------------- */
 .message-pane .viewport {
     /* Ruta al PNG de fondo; ajusta si tu imagen se llama distinto */
-    -fx-background-image: url("bg.jpg");
+    -fx-background-image: url("../../../../../java/com/project/minimercadofx/bg.jpg");
     -fx-background-repeat: repeat;
     -fx-background-size: auto; /* que se repita en mosaico */
     -fx-background-color: transparent;

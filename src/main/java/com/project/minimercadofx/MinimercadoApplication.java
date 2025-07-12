@@ -21,9 +21,21 @@ public class MinimercadoApplication extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 800, 600);
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles/main.css")).toExternalForm());
         stage.setTitle("MiniMercado FX");
+        stage.setOnCloseRequest(event -> {
+            event.consume();
+            closeApplication(stage);
+
+        });
         stage.setScene(scene);
         stage.setResizable(true);
         stage.show();
+    }
+    private void closeApplication(Stage stage) {
+        System.out.println("Closing application...");
+        stage = (Stage) Stage.getWindows().get(0);
+        if (stage != null) {
+            stage.close();
+        }
     }
 }
 

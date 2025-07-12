@@ -3,16 +3,33 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.minimercadofx.controllers.ProveedorController">
-   <VBox prefHeight="200.0" prefWidth="100.0">
-      <HBox prefHeight="100.0" prefWidth="581.0">
-         <TextField fx:id="nombre" alignment="BOTTOM_LEFT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="269.0"  promptText="nombre" />
-         <TextField fx:id="direccion" alignment="BOTTOM_LEFT" layoutX="10.0" layoutY="10.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="269.0" promptText="direccion"/>
-         <TextField fx:id="email" alignment="BOTTOM_LEFT" layoutX="279.0" layoutY="10.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="269.0" promptText="email" />
-         <TextField fx:id="telefono" alignment="BOTTOM_LEFT" layoutX="10.0" layoutY="10.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="269.0" promptText="telefono"/>
-         <TextField fx:id="activo" alignment="BOTTOM_LEFT" layoutX="10.0" layoutY="10.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="269.0" promptText="activo" />
+<StackPane minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.minimercadofx.controllers.ProveedorController">
+   <VBox>
+      <HBox>
+         <TextField fx:id="nombre" alignment="BOTTOM_LEFT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="269.0" promptText="nombre" styleClass="root" stylesheets="@styles/main.css" />
+         <TextField fx:id="direccion" alignment="BOTTOM_LEFT" layoutX="10.0" layoutY="10.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="269.0" promptText="direccion" styleClass="root" stylesheets="@styles/main.css" />
+         <TextField fx:id="email" alignment="BOTTOM_LEFT" layoutX="279.0" layoutY="10.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="269.0" promptText="email" styleClass="root" stylesheets="@styles/main.css" />
+         <TextField fx:id="telefono" alignment="BOTTOM_LEFT" layoutX="10.0" layoutY="10.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="269.0" promptText="telefono" styleClass="root" stylesheets="@styles/main.css" />
+         <TextField fx:id="activo" alignment="BOTTOM_LEFT" layoutX="10.0" layoutY="10.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="269.0" promptText="activo" styleClass="root" stylesheets="@styles/main.css" />
       </HBox>
-      <Button fx:id="agregar" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" text="Agregar" />
-      <Button fx:id="cerrarsesion" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" text="Cerrar Sesion" />
+      <HBox>
+         <children>
+            <Button fx:id="agregar" alignment="BOTTOM_LEFT" contentDisplay="BOTTOM" mnemonicParsing="false" prefHeight="25.0" prefWidth="686.0" styleClass="root" stylesheets="@styles/main.css" text="Agregar" />
+            <Button fx:id="cerrarsesion" alignment="BOTTOM_LEFT" contentDisplay="TOP" mnemonicParsing="false" prefHeight="25.0" prefWidth="655.0" styleClass="root" stylesheets="@styles/main.css" text="Cerrar Sesion" />
+         </children>
+      </HBox>
+        <TableView fx:id="proveedorTable" nodeOrientation="RIGHT_TO_LEFT" stylesheets="@styles/main.css">
+            <columns>
+                <TableColumn fx:id="nombreColumn" prefWidth="111.0" text="Nombre" />
+                <TableColumn fx:id="direccionColumn" prefWidth="111.0" text="Direccion" />
+                <TableColumn fx:id="gmailColumn" prefWidth="95.0" text="Gmail" />
+                <TableColumn fx:id="telefonoColumn" prefWidth="136.0" text="Telefono" />
+                <TableColumn fx:id="activoColumn" minWidth="5.0" prefWidth="169.0" text="Activo" />
+
+            </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+        </TableView>
    </VBox>
 </StackPane>

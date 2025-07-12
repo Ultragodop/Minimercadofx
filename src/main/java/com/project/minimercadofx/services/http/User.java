@@ -1,4 +1,4 @@
-package com.project.minimercadofx.models.chat;
+package com.project.minimercadofx.services.http;
 
 
 public class User {

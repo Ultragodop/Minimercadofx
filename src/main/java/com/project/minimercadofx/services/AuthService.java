@@ -5,6 +5,7 @@ import com.project.minimercadofx.models.Auth.LoginRequest;
 import com.project.minimercadofx.models.Auth.LoginResponse;
 import com.project.minimercadofx.models.Auth.RegisterRequest;
 import com.project.minimercadofx.models.Auth.RegisterResponse;
+import com.project.minimercadofx.services.http.User;
 import com.project.minimercadofx.services.http.Session;
 
 import java.net.URI;
@@ -39,6 +40,8 @@ public class AuthService {
             System.out.println("[AuthService] Respuesta recibida en " + (endTime - startTime) + " ms");
             LoginResponse loginResponse = objectMapper.readValue(response.body(), LoginResponse.class);
             Session.setToken(loginResponse.getToken());
+            User.setId(loginResponse.getId());
+            User.setNombre(loginResponse.getUsername());
             return loginResponse;
 
         } catch (Exception e) {

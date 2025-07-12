@@ -23,6 +23,16 @@ public class ProveedorService {
 
 
     }
+    public Proveedor[] getAllProveedores() throws IOException {
+        String response = httpClientHelper.sendRequest(BASE_URL + "/listar", "GET", null);
+        System.out.println("Lista de proveedores" + response);
 
+        try {
+
+            return objectMapper.readValue(response, Proveedor[].class);
+        } catch (IOException e) {
+            throw new RuntimeException("Error al deserializar la respuesta: " + e.getMessage());
+        }
+    }
 
 }

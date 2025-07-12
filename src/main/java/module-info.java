@@ -6,6 +6,7 @@ module com.project.minimercadofx {
     requires com.fasterxml.jackson.databind;
     requires org.kordamp.ikonli.core;
     requires org.kordamp.ikonli.javafx;
+    requires javafx.base;
     requires org.kordamp.ikonli.antdesignicons;
     requires org.kordamp.bootstrapfx.core;
     requires static org.kordamp.jipsy.annotations;
@@ -15,17 +16,20 @@ module com.project.minimercadofx {
     requires spring.core;
     requires spring.websocket;
 
-    opens com.project.minimercadofx to javafx.fxml;
-    opens com.project.minimercadofx.controllers to javafx.fxml;
-    opens com.project.minimercadofx.models.bussines to javafx.fxml;
+    opens com.project.minimercadofx to javafx.fxml, javafx.base;
+    opens com.project.minimercadofx.services to javafx.fxml, javafx.base;
+    opens com.project.minimercadofx.models.bussines to javafx.fxml, javafx.base, com.fasterxml.jackson.databind;
+    opens com.project.minimercadofx.controllers to javafx.fxml, javafx.base;
+
     opens com.project.minimercadofx.models.chat to javafx.fxml, com.fasterxml.jackson.databind;
     exports com.project.minimercadofx.models.bussines to com.fasterxml.jackson.databind;
     exports com.project.minimercadofx;
     exports com.project.minimercadofx.controllers;
     exports com.project.minimercadofx.services.http to com.fasterxml.jackson.databind;
     exports com.project.minimercadofx.models.chat to com.fasterxml.jackson.databind;
+    exports com.project.minimercadofx.services to com.fasterxml.jackson.databind, javafx.fxml, javafx.controls, javafx.base;
 
-    exports com.project.minimercadofx.services;
     exports com.project.minimercadofx.models.Auth;
     opens com.project.minimercadofx.models.Auth;
+    opens com.project.minimercadofx.services.http to com.fasterxml.jackson.databind, javafx.fxml;
 }

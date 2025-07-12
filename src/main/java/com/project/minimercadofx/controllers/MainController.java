@@ -14,69 +14,39 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.io.IOException;
-
 public class MainController {
     @FXML
     private VBox content;
-
     @FXML
     private VBox sidebar;
-
     @FXML
     private StackPane contentPane;
-
     @FXML
     private Label errorLabel;
-
     @FXML
     private Label successLabel;
-
     @FXML
     private Button btnInventario;
-
     @FXML
     private Button btnVentas;
-
     @FXML
     private Button btnCerrarSesion;
 
-    public MainController(Button btnInventario,
-                          Button btnVentas,
-                          Label errorLabel,
-                            Label successLabel,
-                          Button btnCerrarSesion)  {
-        this.btnInventario = btnInventario;
-        this.btnCerrarSesion = btnCerrarSesion;
-        this.btnVentas = btnVentas;
-        this.errorLabel = errorLabel;
-        this.successLabel = successLabel;
-
-    }
-
     @FXML
     private void initialize() {
-        // Aplicar animación de entrada
         fadeInNode(sidebar, 1.0);
         fadeInNode(content, 1.0);
-
-        // Configurar listeners para los botones
         setupButtonListeners();
-
-        // Ocultar mensajes al inicio
         hideMessages();
     }
 
     private void setupButtonListeners() {
-        btnInventario.setOnAction(event -> handleInventario());
-        btnVentas.setOnAction(event -> handleVentas());
-
+        btnInventario.setOnAction(event -> loadModule("Inventario", "inventario.fxml"));
+        btnVentas.setOnAction(event -> loadModule("Ventas", "venta.fxml"));
         btnCerrarSesion.setOnAction(event -> handleCerrarSesion());
 
-        // Configurar efectos hover para todos los botones
         setupHoverEffect(btnInventario);
         setupHoverEffect(btnVentas);
-
         setupHoverEffect(btnCerrarSesion);
     }
 
@@ -92,36 +62,13 @@ public class MainController {
         });
     }
 
-    private void handleInventario() {
-
-    }
-
-    private void handleVentas() {
-
-    }
-
-    private void handleCompras() {
-
-    }
-
-    private void handleGastos() {
-
-    }
-
-    private void handleEmpleados() {
-
-    }
-
-    private void handleConfiguracion() {
-    }
-
     private void handleCerrarSesion() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(MinimercadoApplication.class.getResource("login.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
             Stage stage = (Stage) btnCerrarSesion.getScene().getWindow();
             stage.setScene(scene);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             showError(null, "Error al cargar la pantalla de login");
         }
@@ -132,13 +79,11 @@ public class MainController {
             FXMLLoader loader = new FXMLLoader(MinimercadoApplication.class.getResource(fxmlFile));
             Node moduleContent = loader.load();
 
-            // Animación de transición
             FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.3), contentPane);
             fadeOut.setFromValue(1.0);
             fadeOut.setToValue(0.0);
             fadeOut.setOnFinished(e -> {
                 contentPane.getChildren().setAll(moduleContent);
-
                 FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.3), contentPane);
                 fadeIn.setFromValue(0.0);
                 fadeIn.setToValue(1.0);
@@ -147,7 +92,7 @@ public class MainController {
             fadeOut.play();
 
             showSuccess("Módulo " + moduleName + " cargado exitosamente");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             showError(null, "Error al cargar el módulo " + moduleName);
         }
@@ -159,17 +104,9 @@ public class MainController {
     }
 
     private void showError(Control field, String message) {
-        if (field != null) {
-            field.setStyle("-fx-border-color: #ff0000; -fx-border-width: 0 0 2 0;");
-        }
         errorLabel.setText(message);
         errorLabel.setVisible(true);
         successLabel.setVisible(false);
-
-        // Animación de shake para el campo con error si existe
-        if (field != null) {
-            shakeNode(field);
-        }
     }
 
     private void showSuccess(String message) {
@@ -184,17 +121,5 @@ public class MainController {
         fadeTransition.setFromValue(0.0);
         fadeTransition.setToValue(1.0);
         fadeTransition.play();
-    }
-
-    private void shakeNode(Node node) {
-        double originalX = node.getTranslateX();
-        javafx.animation.Timeline timeline = new javafx.animation.Timeline(
-            new javafx.animation.KeyFrame(Duration.millis(0), new javafx.animation.KeyValue(node.translateXProperty(), originalX)),
-            new javafx.animation.KeyFrame(Duration.millis(100), new javafx.animation.KeyValue(node.translateXProperty(), originalX + 10)),
-            new javafx.animation.KeyFrame(Duration.millis(200), new javafx.animation.KeyValue(node.translateXProperty(), originalX - 10)),
-            new javafx.animation.KeyFrame(Duration.millis(300), new javafx.animation.KeyValue(node.translateXProperty(), originalX + 5)),
-            new javafx.animation.KeyFrame(Duration.millis(400), new javafx.animation.KeyValue(node.translateXProperty(), originalX))
-        );
-        timeline.play();
     }
 }

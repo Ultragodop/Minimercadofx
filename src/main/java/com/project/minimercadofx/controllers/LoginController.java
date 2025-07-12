@@ -9,14 +9,20 @@ import com.project.minimercadofx.services.ProductService;
 
 import com.project.minimercadofx.services.http.Session;
 import javafx.animation.FadeTransition;
-import com.project.minimercadofx.models.chat.User;
+
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -45,12 +51,9 @@ public class LoginController {
 
     @FXML
     private Label successLabel;
-    private final AuthService authService;
-    private final ProductService productService;
-    public LoginController() {
-        this.authService = new AuthService();
-        this.productService = new ProductService();
-    }
+    private final AuthService authService = new AuthService();
+    private final ProductService productService= new ProductService();
+
 
     @FXML
     private void initialize() {
@@ -67,8 +70,18 @@ public class LoginController {
             validateField(passwordField);
             hideMessages();
         });
+        // Configurar evento de enter para el botón de login
+        formContainer.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.ENTER) {
+                    handleLogin();
+                }
+            }
+        });
 
-        
+
+
         loginButton.setOnAction(event -> handleLogin());
         productButton.setOnAction(event -> handleGetProducts());
         registerButton.setOnAction(event -> handleRegister());
@@ -94,12 +107,12 @@ public class LoginController {
                         showSuccess("¡Usted se ha logueado correctamente!");
                         String username= usernameField.getText();
 
-                        User.setNombre(username);
+
 
 
 
                         try {
-                            FXMLLoader fxmlLoader = new FXMLLoader(MinimercadoApplication.class.getResource("proveedor.fxml"));
+                            FXMLLoader fxmlLoader = new FXMLLoader(MinimercadoApplication.class.getResource("chat.fxml"));
                             Scene scene = new Scene(fxmlLoader.load());
                             Stage stage = (Stage) loginButton.getScene().getWindow();
                             stage.setScene(scene);
@@ -226,12 +239,12 @@ public class LoginController {
 
     private void shakeNode(Node node) {
         double originalX = node.getTranslateX();
-        javafx.animation.Timeline timeline = new javafx.animation.Timeline(
-            new javafx.animation.KeyFrame(Duration.millis(0), new javafx.animation.KeyValue(node.translateXProperty(), originalX)),
-            new javafx.animation.KeyFrame(Duration.millis(100), new javafx.animation.KeyValue(node.translateXProperty(), originalX + 10)),
-            new javafx.animation.KeyFrame(Duration.millis(200), new javafx.animation.KeyValue(node.translateXProperty(), originalX - 10)),
-            new javafx.animation.KeyFrame(Duration.millis(300), new javafx.animation.KeyValue(node.translateXProperty(), originalX + 5)),
-            new javafx.animation.KeyFrame(Duration.millis(400), new javafx.animation.KeyValue(node.translateXProperty(), originalX))
+        Timeline timeline = new Timeline(
+            new KeyFrame(Duration.millis(0), new KeyValue(node.translateXProperty(), originalX)),
+            new KeyFrame(Duration.millis(100), new KeyValue(node.translateXProperty(), originalX + 10)),
+            new KeyFrame(Duration.millis(200), new KeyValue(node.translateXProperty(), originalX - 10)),
+            new KeyFrame(Duration.millis(300), new KeyValue(node.translateXProperty(), originalX + 5)),
+            new KeyFrame(Duration.millis(400), new KeyValue(node.translateXProperty(), originalX))
         );
         timeline.play();
     }

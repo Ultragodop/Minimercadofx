@@ -178,4 +178,10 @@
 .separator .line {
     -fx-background-color: #34495e;
     -fx-opacity: 0.3;
-} 
+}
+
+.app-title {
+}
+
+.logo-container {
+}

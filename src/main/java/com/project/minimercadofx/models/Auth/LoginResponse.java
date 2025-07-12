@@ -5,10 +5,17 @@ public class LoginResponse {
     private String message;
     private String token;
     private Long id;
+    private String username;
     public LoginResponse() {
     }
 
+    public String getUsername() {
+        return username;
+    }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public LoginResponse(String status, String message) {
         this.status = status;

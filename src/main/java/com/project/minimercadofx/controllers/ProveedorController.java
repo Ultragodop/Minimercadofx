@@ -9,7 +9,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -23,9 +26,21 @@ public class ProveedorController {
     private Button agregar;
     public AuthService authService = new AuthService();
     public ProveedorService proveedorService = new ProveedorService();
-
     @FXML
-    public void initialize() {
+    TableView<Proveedor> proveedorTable;
+    @FXML
+    TableColumn<Proveedor, String> nombreColumn;
+    @FXML
+    TableColumn<Proveedor, String> telefonoColumn;
+    @FXML
+    TableColumn<Proveedor, String> direccionColumn;
+    @FXML
+    TableColumn<Proveedor, String> gmailColumn;
+    @FXML
+    TableColumn<Proveedor, Boolean> activoColumn;
+    @FXML
+    public void initialize() throws IOException {
+
         nombre.textProperty().addListener((obs, oldVal, newVal) -> validateField(nombre));
         telefono.textProperty().addListener((obs, oldVal, newVal) -> validateField(telefono));
         direccion.textProperty().addListener((obs, oldVal, newVal) -> validateField(direccion));
@@ -33,6 +48,17 @@ public class ProveedorController {
         activo.textProperty().addListener((obs, oldVal, newVal) -> validateField(activo));
         agregar.setOnAction(event -> handleAgregar());
         cerrarsesion.setOnAction(event -> handleCerrarSesion());
+        proveedorTable.setEditable(true);
+
+        nombreColumn.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        telefonoColumn.setCellValueFactory(new PropertyValueFactory<>("telefono"));
+        direccionColumn.setCellValueFactory(new PropertyValueFactory<>("direccion"));
+        gmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
+        activoColumn.setCellValueFactory(new PropertyValueFactory<>("activo"));
+
+
+        proveedorTable.getItems().addAll(proveedorService.getAllProveedores());
+
 
 
     }
@@ -46,6 +72,9 @@ public class ProveedorController {
                 Stage stage = (Stage) cerrarsesion.getScene().getWindow();
                 stage.setScene(scene);
             }
+
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -64,7 +93,9 @@ public class ProveedorController {
 
             try {
                 proveedorService.agregarProveedor(proveedor);
-
+                proveedorTable.getItems().add(proveedor);
+                // funciona para mas adelante borrar un proveedor
+                // proveedorTable.getItems().remove(proveedor); :D
                 nombre.clear();
                 telefono.clear();
                 direccion.clear();

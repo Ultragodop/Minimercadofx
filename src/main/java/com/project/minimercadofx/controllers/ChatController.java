@@ -1,9 +1,5 @@
 package com.project.minimercadofx.controllers;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.minimercadofx.models.chat.CrearSalaRequest;
-import com.project.minimercadofx.models.chat.User;
+import com.project.minimercadofx.services.http.User;
 import com.project.minimercadofx.services.WebSocketService;
 import com.project.minimercadofx.services.chat.EncryptionUtils;
 import javafx.application.Platform;
@@ -22,23 +18,18 @@ import javafx.scene.input.KeyCode;
 import javafx.geometry.Insets;
 import javafx.scene.paint.Color;
 
-import java.net.URI;
-import java.net.URLEncoder;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
+
 import java.util.*;
 
 public class ChatController {
 
-    String token= "Sexo";
+
     @FXML private ComboBox<String> salaComboBox;
     @FXML private ScrollPane scrollPane;
     @FXML private VBox mensajesContainer;
     @FXML private TextArea TextArea;
-
-    private WebSocketService webSocketService;
+    private List<String> listaSalas= new ArrayList<>();
+    private final WebSocketService webSocketService= new WebSocketService();
     private final Map<String, Color> usuarioColores = new HashMap<>();
     private final List<Color> coloresDisponibles = Arrays.asList(
             Color.BLUE, Color.GREEN, Color.ORANGE, Color.PURPLE,
@@ -57,102 +48,57 @@ public class ChatController {
 
     @FXML
     public void initialize() {
-        // 1) Antes de cualquier otra cosa, llamamos al backend para listar salas
-        new Thread(() -> {
-            try {
-               String token= "Sexo";
-                HttpClient client = HttpClient.newHttpClient();
-                HttpRequest request = HttpRequest.newBuilder()
-                        .uri(new URI("http://localhost:3050/api/salas/todas"))
-                        .header("Authorization", "Bearer " + token)
-                        .GET()
-                        .build();
 
-                HttpResponse<String> response =
-                        client.send(request, HttpResponse.BodyHandlers.ofString());
+                        listaSalas = webSocketService.obtenerSalas();
+                    if( listaSalas==null ||!listaSalas.isEmpty()) {
+                        Platform.runLater(() -> {
+                            salaComboBox.getItems().clear();
+                            salaComboBox.getItems().addAll(listaSalas);
 
-                if (response.statusCode() == 200) {
-                    // Parseamos JSON Array de strings: ["general","programadores",...]
-                    ObjectMapper mapper = new ObjectMapper();
-                    List<String> listaSalas = mapper.readValue(
-                            response.body(), new TypeReference<>() {
-                            }
-                    );
 
+                            salaActual = listaSalas.get(0);
+                            salaComboBox.setValue(salaActual);
+                            conectarASala(salaActual);
+
+                        });
+                    }
+
+                 else {
                     Platform.runLater(() -> {
-                        salaComboBox.getItems().clear();
-                        salaComboBox.getItems().addAll(listaSalas);
+                        mostrarError("Error al obtener salas", "No se encontraron salas disponibles.");
 
-                        // Si existe "general", lo seleccionamos; si no, tomamos el primero
-                        if (listaSalas.contains("general")) {
-                            salaComboBox.setValue("general");
-                        } else {
-                            salaComboBox.setValue(listaSalas.get(0));
-                        }
-                        // Guardamos cuál es la sala actual
-                        salaActual = salaComboBox.getValue();
-                        conectarASala(salaActual);
-                    });
-                } else {
-                    // Si no devuelve 200, mostramos alerta y ponemos "general" como fallback
-                    Platform.runLater(() -> {
-                        mostrarError("Error al obtener salas", "Código HTTP: " + response.statusCode());
-                        // opción de fallback: crear “general” localmente
                         salaComboBox.getItems().clear();
-                        salaComboBox.getItems().add("general");
-                        salaComboBox.setValue("general");
-                        salaActual = "general";
-                        conectarASala(salaActual);
+
+
+
                     });
                 }
 
-            } catch (Exception e) {
-                Platform.runLater(() -> {
-                    mostrarError("Excepción al leer salas", e.getMessage());
-                    salaComboBox.getItems().clear();
-                    salaComboBox.getItems().add("general");
-                    salaComboBox.setValue("general");
-                    salaActual = "general";
-                    conectarASala(salaActual);
-                });
-            }
-        }).start();
-
-        // 2) Listener para cambio de sala
         salaComboBox.setOnAction(event -> {
             String nuevaSala = salaComboBox.getValue();
             if (nuevaSala != null && !nuevaSala.equals(salaActual)) {
                 cambiarSala(nuevaSala);
             }
         });
-
-        // 3) Texto + ENTER para enviar
         TextArea.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER && !event.isShiftDown()) {
                 event.consume();
                 enviarMensaje();
             }
         });
-
-        // 4) Auto-scroll
         mensajesContainer.heightProperty().addListener((obs, oldVal, newVal) -> {
             if (scrollPane.getVvalue() == 1.0 || scrollPane.getVvalue() == scrollPane.getVmax()) {
                 Platform.runLater(() -> scrollPane.setVvalue(1.0));
             }
         });
-
-        // 5) Al cerrar la ventana, cerramos el WebSocket
         Platform.runLater(() -> {
             Stage stage = (Stage) scrollPane.getScene().getWindow();
             stage.setOnCloseRequest(evt -> cerrarChat());
         });
     }
-
     private void conectarASala(String sala) {
-        webSocketService = new WebSocketService(User.getNombre(), sala);
-        String uri = "ws://localhost:3050/chat/" + sala + "?token=" + token;
+        webSocketService.conectar(sala, (usuario, mensaje) -> {
 
-        webSocketService.conectar(uri, (usuario, mensaje) -> {
             if (usuario.equals(User.getNombre())) return;
             Platform.runLater(() -> {
                 Color color = obtenerColorUsuario(usuario);
@@ -178,16 +124,20 @@ public class ChatController {
             });
         });
     }
-
     private void cambiarSala(String nuevaSala) {
         cerrarChat();
+
         mensajesContainer.getChildren().clear();
         usuarioColores.clear();
         colorIndex = 0;
-        salaActual = nuevaSala;
-        conectarASala(salaActual);
-    }
 
+        salaComboBox.setValue(nuevaSala);
+        System.out.println("Cambiando a la sala: " + nuevaSala);
+        salaActual = nuevaSala;
+        System.out.println("Sala actual: " + salaActual);
+        conectarASala(nuevaSala);
+        System.out.println("Conectado a la sala: " + salaActual);
+    }
     @FXML
     public void enviarMensaje() {
         String texto = TextArea.getText().trim();
@@ -212,18 +162,17 @@ public class ChatController {
             Platform.runLater(() -> scrollPane.setVvalue(2.0));
         }
     }
-
     private void scrollToBottom() {
         Platform.runLater(() -> scrollPane.setVvalue(1.0));
     }
-
     public void cerrarChat() {
-        if (webSocketService != null) {
+        try {
             webSocketService.cerrarConexion();
-            webSocketService = null;
+        }
+        catch (Exception e) {
+            System.err.println("Error al cerrar la conexión: " + e.getMessage());
         }
     }
-
     @FXML
     public void crearNuevaSala() {
         TextInputDialog dialogNombre = new TextInputDialog();
@@ -254,38 +203,14 @@ public class ChatController {
                                 } catch (NumberFormatException ignored) {
                                 }
                             }
-
-                            String user =(User.getNombre());
-                            System.out.println(user);
-                            Long v= obtenerIdPorNombre(user);
-                            System.out.println(v);
-
-                            if (!usuariosAutorizados.contains(v)) {
-                                usuariosAutorizados.add(v);
+                            if (usuariosAutorizados.isEmpty()) {
+                                Platform.runLater(() -> {
+                                    mostrarError("Error al crear sala", "Debe ingresar al menos un ID de usuario válido.");
+                                });
+                                return;
                             }
-
-
-                            CrearSalaRequest requestBody = new CrearSalaRequest();
-                            requestBody.setNombre(nombre);
-                            requestBody.setCreadorId(v);
-
-                            requestBody.setUsuariosAutorizadosIds(usuariosAutorizados);
-
-
-                            String json = new ObjectMapper().writeValueAsString(requestBody);
-                            System.out.println(json);
-                         
-                            HttpClient client = HttpClient.newHttpClient();
-                            HttpRequest request = HttpRequest.newBuilder()
-                                    .uri(new URI("http://localhost:3050/api/salas/crear"))
-                                    .header("Content-Type", "application/json")
-                                    .header("Authorization", "Bearer " + token)
-                                    .POST(HttpRequest.BodyPublishers.ofString(json))
-                                    .build();
-
-                            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-                            if (response.statusCode() == 200) {
+                            String response = webSocketService.crearSala(nombre, usuariosAutorizados);
+                            if (response.equals("success")) {
                                 Platform.runLater(() -> {
                                     salaComboBox.getItems().add(nombre);
                                     salaComboBox.setValue(nombre);
@@ -293,7 +218,7 @@ public class ChatController {
                             } else {
                                 Platform.runLater(() -> {
                                     mostrarError("No se pudo crear la sala en el servidor.",
-                                            "Código HTTP: " + response.statusCode());
+                                            "Código HTTP: " + response);
                                 });
                             }
 
@@ -308,40 +233,7 @@ public class ChatController {
             }
         });
     }
-    public Long obtenerIdPorNombre(String nombreUsuario) {
-        try {
-            String url = "http://localhost:3050/api/salas/userid?nombre=" + URLEncoder.encode(nombreUsuario, StandardCharsets.UTF_8);
-            System.out.println(url);
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI(url))
-                    .header("Authorization", "Bearer " + token)
-                    .GET()
-                    .build();
 
-            HttpClient client = HttpClient.newHttpClient();
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(request);
-            System.out.println(response.body());
-
-            if (response.statusCode() == 200) {
-                String body = response.body();
-                if (body == null || body.trim().equals("null")) {
-                    return null; // No se encontró el usuario
-                }
-
-                return Long.parseLong(body.trim());
-            } else if (response.statusCode() == 404) {
-                return null;
-            } else {
-                System.err.println("Error al obtener ID de usuario: " + response.statusCode());
-                return null;
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
 
 
