@@ -1,58 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<VBox spacing="0"
-      styleClass="chat-root"
-      stylesheets="@styles/chat.css"
-      xmlns="http://javafx.com/javafx/17.0.12"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.project.minimercadofx.controllers.ChatController">
+<VBox spacing="0" styleClass="chat-root" stylesheets="@styles/chat.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.minimercadofx.controllers.ChatController">
 
     <children>
         <!-- 1) Cabecera con selector de sala, botón para crear sala y título -->
         <HBox alignment="CENTER_LEFT" spacing="10" styleClass="header">
             <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/>
+                <Insets bottom="10" left="10" right="10" top="10" />
             </padding>
 
             <!-- ComboBox para seleccionar sala existente -->
-            <ComboBox fx:id="salaComboBox"
-                      promptText="Selecciona sala"
-                      styleClass="sala-combo"/>
+            <ComboBox fx:id="salaComboBox" promptText="Selecciona sala" styleClass="sala-combo" />
 
             <!-- Botón que invoca a crearNuevaSala() -->
-            <Button text="Nueva sala"
-                    onAction="#crearNuevaSala"
-                    styleClass="send-button"/>
+            <Button onAction="#crearNuevaSala" styleClass="send-button" text="Nueva sala" />
 
             <!-- Etiqueta con el título del chat -->
-            <Label alignment="CENTER" maxWidth="Infinity"
-                   styleClass="header-text"
-                   text="Chat entre bellakos cifrada de extremo a extremo"/>
+            <Label alignment="CENTER" maxWidth="Infinity" styleClass="header-text" text="Chat entre bellakos cifrada de extremo a extremo" />
         </HBox>
 
         <!-- 2) Área de mensajes (ScrollPane con fondo tipo WhatsApp) -->
-        <ScrollPane fx:id="scrollPane"
-                    fitToWidth="true"
-                    hbarPolicy="NEVER"
-                    pannable="false"
-                    styleClass="message-pane"
-                    vbarPolicy="AS_NEEDED"
-                    VBox.vgrow="ALWAYS">
+        <ScrollPane fx:id="scrollPane" fitToWidth="true" hbarPolicy="NEVER" pannable="false" styleClass="message-pane" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
             <content>
-                <VBox fx:id="mensajesContainer"
-                      spacing="5"
-                      styleClass="mensajes-vbox">
+                <VBox fx:id="mensajesContainer" spacing="5" styleClass="mensajes-vbox">
                     <padding>
-                        <Insets top="10" right="10" bottom="10" left="10"/>
+                        <Insets bottom="10" left="10" right="10" top="10" />
                     </padding>
                 </VBox>
             </content>
@@ -61,21 +37,15 @@
         <!-- 3) HBox de entrada de texto (siempre pegada al fondo) -->
         <HBox alignment="CENTER_LEFT" spacing="10" styleClass="input-area">
             <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/>
+                <Insets bottom="10" left="10" right="10" top="10" />
             </padding>
 
             <!-- TextArea para la entrada, con HBox.hgrow para ser responsivo -->
-            <TextArea fx:id="TextArea"
-                      prefRowCount="2"
-                      promptText="Escribe un mensaje..."
-                      styleClass="text-input"
-                      wrapText="true"
-                      HBox.hgrow="ALWAYS"/>
+            <TextArea fx:id="TextArea" prefRowCount="2" promptText="Escribe un mensaje..." styleClass="text-input" wrapText="true" HBox.hgrow="ALWAYS" />
 
             <!-- Botón que invoca al método enviarMensaje() -->
-            <Button text="Enviar"
-                    onAction="#enviarMensaje"
-                    styleClass="send-button"/>
+            <Button onAction="#enviarMensaje" styleClass="send-button" text="Enviar" />
+         <Button fx:id="cerrarSesion" layoutX="686.0" layoutY="37.0" styleClass="send-button" text="Cerrar" />
         </HBox>
     </children>
 </VBox>

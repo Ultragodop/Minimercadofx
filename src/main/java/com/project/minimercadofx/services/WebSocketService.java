@@ -1,5 +1,4 @@
 package com.project.minimercadofx.services;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.minimercadofx.models.chat.ChatMessage;
@@ -16,8 +15,10 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import java.util.Map;
 import java.util.function.BiConsumer;
 
 public class WebSocketService {
@@ -34,14 +35,19 @@ public class WebSocketService {
     public void conectar(String sala, BiConsumer<String, String> onMensajeRecibidoCallback) {
         this.onMensajeRecibido = onMensajeRecibidoCallback;
         String token = Session.getToken();
-        String uri = "ws://localhost:3050/chat/" + sala + "?token=" + token;
+        String uri = "ws://localhost:3050/chat/" + sala;
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", "Bearer " + token);
+        headers.put("User-Agent", "JavaFx-WebSocket-Client");
+
         try {
-            client = new WebSocketClient(new URI(uri)) {
+            client = new WebSocketClient(new URI(uri) , new HashMap<>(headers)) {
+
                 @Override
                 public void onOpen(ServerHandshake handshakedata) {
                     System.out.println("✓ Conectado a la sala: " + sala);
-                }
 
+                }
                 @Override
                 public void onMessage(String message) {
                     try {

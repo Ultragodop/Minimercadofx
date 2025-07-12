@@ -10,6 +10,7 @@ import com.project.minimercadofx.services.http.Session;
 
 import java.net.URI;
 import java.net.http.HttpClient;
+import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
@@ -37,6 +38,8 @@ public class AuthService {
 
             HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
             long endTime = System.currentTimeMillis();
+            HttpHeaders headers = response.headers();
+            System.out.println("[AuthService] Headers: " + headers.map());
             System.out.println("[AuthService] Respuesta recibida en " + (endTime - startTime) + " ms");
             LoginResponse loginResponse = objectMapper.readValue(response.body(), LoginResponse.class);
             Session.setToken(loginResponse.getToken());

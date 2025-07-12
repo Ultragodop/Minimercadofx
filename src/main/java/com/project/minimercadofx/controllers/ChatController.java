@@ -1,14 +1,13 @@
 package com.project.minimercadofx.controllers;
+import com.project.minimercadofx.MinimercadoApplication;
 import com.project.minimercadofx.services.http.User;
 import com.project.minimercadofx.services.WebSocketService;
 import com.project.minimercadofx.services.chat.EncryptionUtils;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextInputDialog;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -19,6 +18,7 @@ import javafx.geometry.Insets;
 import javafx.scene.paint.Color;
 
 
+import java.io.IOException;
 import java.util.*;
 
 public class ChatController {
@@ -27,6 +27,7 @@ public class ChatController {
     @FXML private ComboBox<String> salaComboBox;
     @FXML private ScrollPane scrollPane;
     @FXML private VBox mensajesContainer;
+    @FXML private Button cerrarSesion;
     @FXML private TextArea TextArea;
     private List<String> listaSalas= new ArrayList<>();
     private final WebSocketService webSocketService= new WebSocketService();
@@ -64,15 +65,26 @@ public class ChatController {
                     }
 
                  else {
-                    Platform.runLater(() -> {
-                        mostrarError("Error al obtener salas", "No se encontraron salas disponibles.");
+                        Platform.runLater(() -> {
+                            mostrarError("Error al obtener salas", "No se encontraron salas disponibles.");
 
-                        salaComboBox.getItems().clear();
+                            salaComboBox.getItems().clear();
 
 
-
-                    });
-                }
+                        });
+                    }
+        cerrarSesion.setOnAction(event -> {
+            cerrarChat();
+            FXMLLoader fxmlLoader = new FXMLLoader(MinimercadoApplication.class.getResource("login.fxml"));
+            Scene scene = null;
+            try {
+                scene = new Scene(fxmlLoader.load());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            Stage stage = (Stage) cerrarSesion.getScene().getWindow();
+            stage.setScene(scene);
+        });
 
         salaComboBox.setOnAction(event -> {
             String nuevaSala = salaComboBox.getValue();
