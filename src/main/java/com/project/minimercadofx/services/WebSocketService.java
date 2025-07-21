@@ -27,7 +27,7 @@ public class WebSocketService {
     private final ObjectMapper mapper = new ObjectMapper();
     private BiConsumer<String, String> onMensajeRecibido;
     private ChatMessage chatMessage;
-    private List<String> listaSalas = new ArrayList<>();
+
 
     public WebSocketService() {
     }
@@ -35,7 +35,7 @@ public class WebSocketService {
     public void conectar(String sala, BiConsumer<String, String> onMensajeRecibidoCallback) {
         this.onMensajeRecibido = onMensajeRecibidoCallback;
         String token = Session.getToken();
-        String uri = "ws://localhost:3050/chat/" + sala;
+        String uri = "ws://localhost:3040/minimercado/chat/" + sala;
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", "Bearer " + token);
         headers.put("User-Agent", "JavaFx-WebSocket-Client");
@@ -78,10 +78,10 @@ public class WebSocketService {
         }
     }
 
-    public void enviarMensaje(String contenido) {
+    public void enviarMensaje(String contenido, String sala) {
         if (client != null && client.isOpen()) {
             try {
-                ChatMessage mensaje = new ChatMessage(User.getNombre(), contenido);
+                ChatMessage mensaje = new ChatMessage(User.getNombre(), contenido, sala);
                 String json = mapper.writeValueAsString(mensaje);
                 client.send(json);
             } catch (Exception e) {
@@ -97,7 +97,7 @@ public class WebSocketService {
         if (client != null)
         {
             try {
-                client.close();
+                client.close(1000, "Cierre de conexión solicitado");
                 System.out.println("✓ Conexión cerrada correctamente.");
             } catch (Exception e) {
                 System.err.println("✗ Error al cerrar conexión: " + e.getMessage());
@@ -108,13 +108,14 @@ public class WebSocketService {
         try {
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI("http://localhost:3050/api/salas/todas-por-permiso/" + User.getId()))
+                    .uri(new URI("http://localhost:3040/minimercado/api/salas/todas-por-permiso/" + User.getId()))
                     .header("Authorization", "Bearer " + Session.getToken())
                     .GET()
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
+            System.out.println("Respuesta del servidor: " + response.body());
             if (response.statusCode() == 200) {
                 return mapper.readValue(response.body(), new TypeReference<>() {
                 });
@@ -142,7 +143,7 @@ public class WebSocketService {
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(new URI("http://localhost:3050/api/salas/crear"))
+                .uri(new URI("http://localhost:3040/minimercado/api/salas/crear"))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + token)
                 .POST(HttpRequest.BodyPublishers.ofString(json))

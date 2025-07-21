@@ -1,5 +1,6 @@
 package com.project.minimercadofx.controllers;
 import com.project.minimercadofx.MinimercadoApplication;
+import com.project.minimercadofx.services.AuthService;
 import com.project.minimercadofx.services.http.User;
 import com.project.minimercadofx.services.WebSocketService;
 import com.project.minimercadofx.services.chat.EncryptionUtils;
@@ -31,6 +32,7 @@ public class ChatController {
     @FXML private TextArea TextArea;
     private List<String> listaSalas= new ArrayList<>();
     private final WebSocketService webSocketService= new WebSocketService();
+    private final AuthService authService= new AuthService();
     private final Map<String, Color> usuarioColores = new HashMap<>();
     private final List<Color> coloresDisponibles = Arrays.asList(
             Color.BLUE, Color.GREEN, Color.ORANGE, Color.PURPLE,
@@ -75,8 +77,9 @@ public class ChatController {
                     }
         cerrarSesion.setOnAction(event -> {
             cerrarChat();
+            authService.logout();
             FXMLLoader fxmlLoader = new FXMLLoader(MinimercadoApplication.class.getResource("login.fxml"));
-            Scene scene = null;
+            Scene scene;
             try {
                 scene = new Scene(fxmlLoader.load());
             } catch (IOException e) {
@@ -107,6 +110,7 @@ public class ChatController {
             Stage stage = (Stage) scrollPane.getScene().getWindow();
             stage.setOnCloseRequest(evt -> cerrarChat());
         });
+
     }
     private void conectarASala(String sala) {
         webSocketService.conectar(sala, (usuario, mensaje) -> {
@@ -168,7 +172,7 @@ public class ChatController {
             mensajesContainer.getChildren().add(contenedor);
 
             String cifrado = EncryptionUtils.encrypt(texto);
-            webSocketService.enviarMensaje(cifrado);
+            webSocketService.enviarMensaje(cifrado,salaActual);
 
             TextArea.clear();
             Platform.runLater(() -> scrollPane.setVvalue(2.0));
@@ -180,6 +184,8 @@ public class ChatController {
     public void cerrarChat() {
         try {
             webSocketService.cerrarConexion();
+
+            System.out.println("Conexión cerrada y sesión finalizada correctamente.");
         }
         catch (Exception e) {
             System.err.println("Error al cerrar la conexión: " + e.getMessage());

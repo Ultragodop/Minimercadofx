@@ -15,7 +15,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class AuthService {
-    private static final String BASE_URL = "http://localhost:3050/api/auth";
+    private static final String BASE_URL = "http://localhost:3040/minimercado/api/auth";
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
 
