@@ -13,8 +13,10 @@ import java.net.http.HttpClient;
 import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.concurrent.Executor;
 
 public class AuthService {
+
     private static final String BASE_URL = "http://localhost:3040/minimercado/api/auth";
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
@@ -22,6 +24,7 @@ public class AuthService {
     public AuthService() {
         this.httpClient = HttpClient.newHttpClient();
         this.objectMapper = new ObjectMapper();
+
     }
 
     public LoginResponse login(String username, String password) {

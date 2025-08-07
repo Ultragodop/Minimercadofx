@@ -19,6 +19,7 @@ import javafx.geometry.Insets;
 import javafx.scene.paint.Color;
 
 
+
 import java.io.IOException;
 import java.util.*;
 
@@ -51,9 +52,10 @@ public class ChatController {
 
     @FXML
     public void initialize() {
+                new Thread(() -> {
+                    listaSalas = webSocketService.obtenerSalas();
 
-                        listaSalas = webSocketService.obtenerSalas();
-                    if( listaSalas==null ||!listaSalas.isEmpty()) {
+                    if (listaSalas == null || !listaSalas.isEmpty()) {
                         Platform.runLater(() -> {
                             salaComboBox.getItems().clear();
                             salaComboBox.getItems().addAll(listaSalas);
@@ -66,7 +68,7 @@ public class ChatController {
                         });
                     }
 
-                 else {
+                    else {
                         Platform.runLater(() -> {
                             mostrarError("Error al obtener salas", "No se encontraron salas disponibles.");
 
@@ -75,41 +77,44 @@ public class ChatController {
 
                         });
                     }
-        cerrarSesion.setOnAction(event -> {
-            cerrarChat();
-            authService.logout();
-            FXMLLoader fxmlLoader = new FXMLLoader(MinimercadoApplication.class.getResource("login.fxml"));
-            Scene scene;
-            try {
-                scene = new Scene(fxmlLoader.load());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            Stage stage = (Stage) cerrarSesion.getScene().getWindow();
-            stage.setScene(scene);
-        });
+                }).start();
 
-        salaComboBox.setOnAction(event -> {
-            String nuevaSala = salaComboBox.getValue();
-            if (nuevaSala != null && !nuevaSala.equals(salaActual)) {
-                cambiarSala(nuevaSala);
-            }
-        });
-        TextArea.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER && !event.isShiftDown()) {
-                event.consume();
-                enviarMensaje();
-            }
-        });
-        mensajesContainer.heightProperty().addListener((obs, oldVal, newVal) -> {
-            if (scrollPane.getVvalue() == 1.0 || scrollPane.getVvalue() == scrollPane.getVmax()) {
-                Platform.runLater(() -> scrollPane.setVvalue(1.0));
-            }
-        });
-        Platform.runLater(() -> {
-            Stage stage = (Stage) scrollPane.getScene().getWindow();
-            stage.setOnCloseRequest(evt -> cerrarChat());
-        });
+
+                    cerrarSesion.setOnAction(event -> {
+                        cerrarChat();
+                        authService.logout();
+                        FXMLLoader fxmlLoader = new FXMLLoader(MinimercadoApplication.class.getResource("login.fxml"));
+                        Scene scene;
+                        try {
+                            scene = new Scene(fxmlLoader.load());
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        Stage stage = (Stage) cerrarSesion.getScene().getWindow();
+                        stage.setScene(scene);
+                    });
+
+                    salaComboBox.setOnAction(event -> {
+                        String nuevaSala = salaComboBox.getValue();
+                        if (nuevaSala != null && !nuevaSala.equals(salaActual)) {
+                            cambiarSala(nuevaSala);
+                        }
+                    });
+                    TextArea.setOnKeyPressed(event -> {
+                        if (event.getCode() == KeyCode.ENTER && !event.isShiftDown()) {
+                            event.consume();
+                            enviarMensaje();
+                        }
+                    });
+                    mensajesContainer.heightProperty().addListener((obs, oldVal, newVal) -> {
+                        if (scrollPane.getVvalue() == 1.0 || scrollPane.getVvalue() == scrollPane.getVmax()) {
+                            Platform.runLater(() -> scrollPane.setVvalue(1.0));
+                        }
+                    });
+                    Platform.runLater(() -> {
+                        Stage stage = (Stage) scrollPane.getScene().getWindow();
+                        stage.setOnCloseRequest(evt -> cerrarChat());
+                    });
 
     }
     private void conectarASala(String sala) {
@@ -172,8 +177,7 @@ public class ChatController {
             mensajesContainer.getChildren().add(contenedor);
 
             String cifrado = EncryptionUtils.encrypt(texto);
-            webSocketService.enviarMensaje(cifrado,salaActual);
-
+             webSocketService.enviarMensaje(cifrado,salaActual);
             TextArea.clear();
             Platform.runLater(() -> scrollPane.setVvalue(2.0));
         }
@@ -182,15 +186,18 @@ public class ChatController {
         Platform.runLater(() -> scrollPane.setVvalue(1.0));
     }
     public void cerrarChat() {
-        try {
-            webSocketService.cerrarConexion();
+        Thread i = new Thread(() -> {
+            try {
+                webSocketService.cerrarConexion();
 
-            System.out.println("Conexión cerrada y sesión finalizada correctamente.");
-        }
-        catch (Exception e) {
-            System.err.println("Error al cerrar la conexión: " + e.getMessage());
-        }
+                System.out.println("Conexión cerrada y sesión finalizada correctamente.");
+            } catch (Exception e) {
+                System.err.println("Error al cerrar la conexión: " + e.getMessage());
+            }
+        });
+        i.start();
     }
+
     @FXML
     public void crearNuevaSala() {
         TextInputDialog dialogNombre = new TextInputDialog();
@@ -210,12 +217,17 @@ public class ChatController {
 
                 Optional<String> resultadoUsuarios = dialogUsuarios.showAndWait();
                 resultadoUsuarios.ifPresent(inputUsuarios -> {
+                new Thread(() ->{ try{System.out.println("Si");} catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
 
                     new Thread(() -> {
                         try {
                             List<Long> usuariosAutorizados = new ArrayList<>();
                             for (String parte : inputUsuarios.split(",")) {
                                 try {
+
                                     Long id = Long.parseLong(parte.trim());
                                     usuariosAutorizados.add(id);
                                 } catch (NumberFormatException ignored) {

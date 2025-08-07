@@ -2,6 +2,7 @@ package com.project.minimercadofx.services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.project.minimercadofx.models.bussines.ProductoDTO;
+import com.project.minimercadofx.models.bussines.ProductoRequest;
 import com.project.minimercadofx.services.http.Session;
 
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.net.http.HttpResponse;
 
 public class ProductService {
 
-    private static final String BASE_URL = "http://localhost:3050/api/inventario";
+    private static final String BASE_URL = "http://localhost:3040/minimercado/api/inventario";
     private final HttpClient httpClientHelper;
     private final ObjectMapper objectMapper;
 
@@ -61,6 +62,28 @@ public ProductoDTO getProductoById(Integer id) throws IOException, InterruptedEx
         System.out.println("Response: " + response);
     return objectMapper.readValue(response, ProductoDTO.class);
 }
-}
 
+public ProductoDTO createProduct(ProductoRequest producto) throws IOException, InterruptedException {
+        String jsonProduct = objectMapper.writeValueAsString(producto);
+        
+        HttpRequest httpRequest = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "/producto"))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + Session.getToken())
+                .POST(HttpRequest.BodyPublishers.ofString(jsonProduct))
+                .build();
+
+        String response = httpClientHelper.send(httpRequest, HttpResponse.BodyHandlers.ofString()).body();
+        System.out.println(jsonProduct);
+        if(response == null || response.isEmpty()) {
+            throw new IOException("No se pudo crear el producto");
+        }
+
+        if(response.contains("Error")) {
+            throw new IOException("Error al crear el producto: " + response);
+        }
+
+        return objectMapper.readValue(response, ProductoDTO.class);
+    }
+}
 

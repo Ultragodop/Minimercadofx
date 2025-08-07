@@ -112,7 +112,7 @@ public class LoginController {
 
 
                         try {
-                            FXMLLoader fxmlLoader = new FXMLLoader(MinimercadoApplication.class.getResource("chat.fxml"));
+                            FXMLLoader fxmlLoader = new FXMLLoader(MinimercadoApplication.class.getResource("inventario.fxml"));
                             Scene scene = new Scene(fxmlLoader.load());
                             Stage stage = (Stage) loginButton.getScene().getWindow();
                             stage.setScene(scene);

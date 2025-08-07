@@ -2,8 +2,6 @@ module com.project.minimercadofx {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.net.http;
-    requires com.fasterxml.jackson.core;
-    requires com.fasterxml.jackson.databind;
     requires org.kordamp.ikonli.core;
     requires org.kordamp.ikonli.javafx;
     requires javafx.base;
@@ -15,12 +13,13 @@ module com.project.minimercadofx {
     requires spring.messaging;
     requires spring.core;
     requires spring.websocket;
+    requires org.eclipse.jetty.util;
+    requires com.fasterxml.jackson.datatype.jsr310;
+    requires com.fasterxml.jackson.databind;
 
-    opens com.project.minimercadofx to javafx.fxml, javafx.base;
     opens com.project.minimercadofx.services to javafx.fxml, javafx.base;
     opens com.project.minimercadofx.models.bussines to javafx.fxml, javafx.base, com.fasterxml.jackson.databind;
     opens com.project.minimercadofx.controllers to javafx.fxml, javafx.base;
-
     opens com.project.minimercadofx.models.chat to javafx.fxml, com.fasterxml.jackson.databind;
     exports com.project.minimercadofx.models.bussines to com.fasterxml.jackson.databind;
     exports com.project.minimercadofx;

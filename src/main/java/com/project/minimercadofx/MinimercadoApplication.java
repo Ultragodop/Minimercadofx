@@ -1,6 +1,7 @@
 package com.project.minimercadofx;
 
 import com.project.minimercadofx.services.AuthService;
+import com.project.minimercadofx.services.http.Session;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -14,6 +15,7 @@ public class MinimercadoApplication extends Application {
     public static void main(String[] args) {
 
         launch();
+
 
     }
 
@@ -34,11 +36,20 @@ public class MinimercadoApplication extends Application {
     }
     private void closeApplication(Stage stage) {
         System.out.println("Closing application...");
-        authService.logout();
+        if(Session.getToken() != null) {
+            authService.logout();
+            stage = (Stage) Stage.getWindows().get(0);
+            if (stage != null) {
+                stage.close();
+            }
+        }
         stage = (Stage) Stage.getWindows().get(0);
         if (stage != null) {
             stage.close();
-        }
+
+
+
     }
-}
+}}
+
 

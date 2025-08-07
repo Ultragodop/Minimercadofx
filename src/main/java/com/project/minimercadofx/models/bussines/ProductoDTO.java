@@ -4,8 +4,8 @@ package com.project.minimercadofx.models.bussines;
 import java.util.Date;
 
 public class ProductoDTO {
-    private Integer id;
-    private Date fechaVencimiento; // Lo convertimos luego a LocalDate si querés
+    private Integer idProducto;
+    private Date fechaVencimiento;
     private boolean activo;
     private String nombre;
     private int stockMinimo;
@@ -16,12 +16,12 @@ public class ProductoDTO {
     private String categoriaNombre;
     private String proveedorNombre;
 
-    public Integer getId() {
-        return id;
+    public Integer getIdProducto() {
+        return idProducto;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setIdProducto(Integer idProducto) {
+        this.idProducto = idProducto;
     }
 
     public Date getFechaVencimiento() {

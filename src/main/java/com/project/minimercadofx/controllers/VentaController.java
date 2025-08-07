@@ -1,11 +1,12 @@
 package com.project.minimercadofx.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.project.minimercadofx.MinimercadoApplication;
 import com.project.minimercadofx.models.bussines.DetallesVenta;
 import com.project.minimercadofx.models.bussines.DetallesVentaRequest;
 import com.project.minimercadofx.models.bussines.ProductoDTO;
+import com.project.minimercadofx.models.bussines.VentaDTO;
 import com.project.minimercadofx.services.AuthService;
+import com.project.minimercadofx.services.FacturacionService;
 import com.project.minimercadofx.services.ProductService;
 import com.project.minimercadofx.services.VentaService;
 import javafx.fxml.FXML;
@@ -14,14 +15,20 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
+@Slf4j
 public class VentaController {
+    private final Executor executor = Executors.newFixedThreadPool(5);
     private ProductService productService;
     private VentaService ventaService;
+    private FacturacionService facturacionService;
     private AuthService authService;
     @FXML
     Button close;
@@ -87,7 +94,9 @@ public class VentaController {
         productService = new ProductService();
         ventaService = new VentaService();
         authService = new AuthService();
+        facturacionService = new FacturacionService();
     }
+
     private void handleCerrarSesion() {
         try {
             String response = authService.logout();
@@ -105,56 +114,62 @@ public class VentaController {
         }
     }
     private void handleAgregarProducto() {
-       try {
 
-           if(!validarCampos()) {
-               verify.setText("Ingrese un ID valido y una cantidad valida");
+            try {
 
-           }
+                if(!validarCampos()) {
+                    verify.setText("Ingrese un ID valido y una cantidad valida");
 
-
-           ProductoDTO producto = productService.getProductoById(Integer.parseInt(parseID.getText()));
-               if(producto == null) {
-                   parseID.setStyle("-fx-border-color: red;");
-                   verify.setText("Producto no encontrado");
-               }
-               boolean exists = productos.getItems().stream()
-                   .anyMatch(p -> {
-                       assert producto != null;
-                       return Objects.equals(p.getId(), producto.getId());
-                   });
-                   if (exists) {
-                       verify.setText("Producto ya agregado");
-                        throw new IllegalArgumentException("Producto ya agregado");
-                   }
-                       if(parseCantidad.getText()==null || parseCantidad.getText().isEmpty() || Integer.parseInt(parseCantidad.getText()) <= 0) {
-                            parseCantidad.setStyle("-fx-border-color: red;");
-                            verify.setText("Ingrese una cantidad valida");
-                            throw new IllegalArgumentException("Cantidad invalida");
-                       }
-                       DetallesVenta venta= new DetallesVenta();
-                        assert producto != null;
-                       venta.setId(producto.getId());
-                       venta.setNombreProducto(producto.getNombre());
-                       venta.setPrecioUnitario(producto.getPrecioVenta());
-                       venta.setCantidad(Integer.parseInt(parseCantidad.getText()));
+                }
 
 
+                ProductoDTO producto = productService.getProductoById(Integer.parseInt(parseID.getText()));
+                if(producto == null) {
+                    parseID.setStyle("-fx-border-color: red;");
+                    verify.setText("Producto no encontrado");
+                }
+                boolean exists = productos.getItems().stream()
+                        .anyMatch(p -> {
+                            assert producto != null;
+                            return Objects.equals(p.getId(), producto.getIdProducto());
+                        });
+                if (exists) {
+                    verify.setText("Producto ya agregado");
+                    throw new IllegalArgumentException("Producto ya agregado");
+                }
+                if(parseCantidad.getText()==null || parseCantidad.getText().isEmpty() || Integer.parseInt(parseCantidad.getText()) <= 0) {
+                    parseCantidad.setStyle("-fx-border-color: red;");
+                    verify.setText("Ingrese una cantidad valida");
+                    throw new IllegalArgumentException("Cantidad invalida");
+                }
+                DetallesVenta venta= new DetallesVenta();
+                assert producto != null;
+                venta.setId(producto.getIdProducto());
+                venta.setNombreProducto(producto.getNombre());
+                venta.setPrecioUnitario(producto.getPrecioVenta());
+                venta.setCantidad(Integer.parseInt(parseCantidad.getText()));
 
-                       productos.getItems().add(venta);
-                          total=total+(venta.getPrecio() * venta.getCantidad());
-                          monto.setText(String.valueOf(total));
-                       parseCantidad.clear();
-                       parseID.clear();
-                       parseID.setStyle("-fx-border-color: green;");
-                       verify.setText(" ");
-                   } catch (Exception e) {
-           throw new RuntimeException(e);
-       }
+
+                ;
+                productos.getItems().add(venta);
+                total=total+(venta.getPrecio() * venta.getCantidad());
+                monto.setText(String.valueOf(total));
+                parseCantidad.clear();
+                parseID.clear();
+                parseID.setStyle("-fx-border-color: green;");
+                verify.setText("Producto agregado con exito");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+
+
     }
     private void handlePagarEfectivo() throws IOException, InterruptedException {
         if (productos.getItems().isEmpty()) {
             verify.setText("No hay productos para pagar");
+            System.out.println("No hay productos para pagar");
+            return;
         }
         detallesVentaList = productos.getItems().stream().map(detalle -> {
             DetallesVentaRequest detalleRequest = new DetallesVentaRequest();
@@ -163,22 +178,31 @@ public class VentaController {
             return detalleRequest;
         }).toList();
 
-        String ventaefectivo= (ventaService.realizarVentaEfectivo(detallesVentaList));
-        if(ventaefectivo.equals("success")) {
+        VentaDTO ventaefectivo= (ventaService.realizarVentaEfectivo(detallesVentaList));
+
+        if(ventaefectivo != null) {
             total = 0;
             monto.setText(String.valueOf(total));
             productos.getItems().clear();
             parseID.clear();
             parseCantidad.clear();
+        verify.setText("Venta realizada con exito");
+            System.out.println("Venta con id " + ventaefectivo.getIdVenta());
+        facturacionService.generarFactura(ventaefectivo.getIdVenta());
         }
+
+
         else{
             verify.setText("Error al realizar la venta");
 
         }
+
     }
     private void handlePagarTarjeta() throws IOException, InterruptedException {
         if (productos.getItems().isEmpty()) {
             verify.setText("No hay productos para pagar");
+            System.out.println("No hay productos para pagar");
+            return;
         }
 
         detallesVentaList= productos.getItems().stream().map(detalle -> {;
@@ -188,13 +212,14 @@ public class VentaController {
             return detalleRequest;
         }).toList();
 
-        String ventaefectivo= (ventaService.realizarVentaTarjeta(detallesVentaList));
-        if(ventaefectivo.equals("success")) {
+        String transactionId= (ventaService.realizarVentaTarjeta(detallesVentaList));
+        if(transactionId != null) {
             total = 0;
             monto.setText(String.valueOf(total));
             productos.getItems().clear();
             parseID.clear();
             parseCantidad.clear();
+            facturacionService.generarFacturaTarjeta(transactionId);
         }
         else{
             verify.setText("Error al realizar la venta");

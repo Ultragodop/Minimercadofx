@@ -2,7 +2,7 @@ package com.project.minimercadofx.models.bussines;
 
 
 public class Proveedor {
-    private Integer id;
+    private Integer idProveedor;
     private String nombre;
     private String telefono;
     private String direccion;
@@ -12,21 +12,12 @@ public class Proveedor {
     public Proveedor() {
     }
 
-    public Proveedor(String nombre, String telefono, String direccion, String email, boolean activo) {
-        this.nombre = nombre;
-        this.telefono = telefono;
-        this.direccion = direccion;
-        this.email = email;
-        this.activo = true;
-
+    public Integer getIdProveedor() {
+        return idProveedor;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
+    public void setIdProveedor(Integer idProveedor) {
+        this.idProveedor = idProveedor;
     }
 
     public String getNombre() {

@@ -18,12 +18,13 @@
        <SplitPane dividerPositions="0.7572254335260116" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER">
            <VBox prefHeight="200.0" prefWidth="100.0">
                <HBox prefHeight="20.0" prefWidth="598.0">
-                   <TextField />
+                   <TextField fx:id="parseID" />
+               <TextField fx:id="parseCantidad" layoutX="10.0" layoutY="10.0" />
                    <Button fx:id="agregar" mnemonicParsing="false" text="Agregar" />
                </HBox>
                <TableView fx:id="productos" prefHeight="237.0" prefWidth="598.0">
                    <columns>
-                       <TableColumn fx:id="id" prefWidth="75.0" text="Id" />
+                       <TableColumn fx:id="idProducto" prefWidth="75.0" text="Id" />
                        <TableColumn fx:id="nombre" prefWidth="150.0" text="Nombre" />
                        <TableColumn fx:id="cantidad" minWidth="0.0" prefWidth="132.0" text="Cantidad" />
                        <TableColumn fx:id="precio" prefWidth="240.0" text="Precio unitario" />
@@ -44,12 +45,14 @@
                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                        </rowConstraints>
                        <Label prefHeight="17.0" prefWidth="116.0" text="Monto" />
-                       <Label layoutX="10.0" layoutY="15.0" prefHeight="17.0" prefWidth="106.0" text="0.0" GridPane.columnIndex="1" />
+                       <Label fx:id="monto" layoutX="10.0" layoutY="15.0" prefHeight="17.0" prefWidth="106.0" text="0.0" GridPane.columnIndex="1" />
+                  <Label fx:id="verify" layoutX="180.0" layoutY="15.0" prefHeight="17.0" prefWidth="106.0" GridPane.rowIndex="1" />
                    </GridPane>
                    <VBox prefHeight="81.0" prefWidth="74.0">
                        <Button fx:id="efectivo" mnemonicParsing="false" text="Efectivo" />
                        <Button fx:id="tarjeta" mnemonicParsing="false" text="Tarjeta" />
                    </VBox>
+               <Button fx:id="close" mnemonicParsing="false" text="Cerrar Sesion" />
                </HBox>
            </VBox>
        </SplitPane>

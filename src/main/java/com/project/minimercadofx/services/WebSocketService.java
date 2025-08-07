@@ -28,7 +28,6 @@ public class WebSocketService {
     private BiConsumer<String, String> onMensajeRecibido;
     private ChatMessage chatMessage;
 
-
     public WebSocketService() {
     }
 
