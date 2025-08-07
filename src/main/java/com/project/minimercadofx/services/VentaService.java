@@ -3,7 +3,7 @@ package com.project.minimercadofx.services;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.project.minimercadofx.models.bussines.DetallesVenta;
+
 import com.project.minimercadofx.models.bussines.DetallesVentaRequest;
 import com.project.minimercadofx.models.bussines.VentaDTO;
 import com.project.minimercadofx.models.bussines.VentaRequest;
